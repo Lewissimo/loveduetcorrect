@@ -76,6 +76,7 @@ const GallerySlider = ({type, backFunction}: {type: 'scene' | 'studio' | null, b
 
   return (
     <Box>
+      {type === 'scene' ? 's' : 'w'}
       <IconButton
 
         onClick={() => backFunction(null)} 
@@ -91,7 +92,6 @@ const GallerySlider = ({type, backFunction}: {type: 'scene' | 'studio' | null, b
           </Box>
         ))}
       </Slider>
-
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
         <IconButton onClick={handleClose} style={{ position: 'absolute', right: 8, top: 8, color: 'white' }}>
           <CloseIcon />
