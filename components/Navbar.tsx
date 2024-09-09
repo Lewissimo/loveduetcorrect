@@ -21,15 +21,20 @@ const NavBar: React.FC = () => {
   };
 
   const menuItems = (
-    <Box  sx={{color:'white'}}>
+    <Box sx={{ color: 'white' }}>
       <Link href="#home" passHref>
         <Button color="inherit">Home</Button>
       </Link>
+      <Link href="#offer" passHref>
+        <Button color="inherit">Oferta</Button>
+      </Link>
+
       <Link href="#about" passHref>
         <Button color="inherit">O nas</Button>
       </Link>
-      <Link href="#offer" passHref>
-        <Button color="inherit">Oferta</Button>
+
+      <Link href="#artist" passHref>
+        <Button color="inherit">Artyści</Button>
       </Link>
       <Link href="#gallery" passHref>
         <Button color="inherit">Galeria</Button>
@@ -44,41 +49,62 @@ const NavBar: React.FC = () => {
   );
 
   return (
-    <AppBar position="static" color="transparent" elevation={0} id='home'>
+    <AppBar position="static" color="transparent" elevation={0} id="home">
       <Toolbar>
         {!isMobile ? (
           <Box display="flex" justifyContent="flex-start" sx={{ gap: 2 }}>
             {menuItems}
           </Box>
         ) : (
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            
-            onClick={handleDrawerToggle}
-          >
-            <MenuIcon sx={{color: 'white'}} />
-          </IconButton>
+          <Box sx={{ ml: 'auto' }}>
+            <IconButton
+              edge="end"
+              color="inherit"
+              aria-label="menu"
+              onClick={handleDrawerToggle}
+            >
+              <MenuIcon sx={{ color: 'white' }} />
+            </IconButton>
+          </Box>
         )}
       </Toolbar>
-      <Drawer anchor="left" sx={{color:'white'}} open={drawerOpen} onClose={handleDrawerToggle}>
+      <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerToggle}>
         <List>
-          <ListItem onClick={handleDrawerToggle}>
-            <ListItemText primary="Home" />
-          </ListItem>
-          <ListItem onClick={handleDrawerToggle}>
-            <ListItemText primary="O nas" />
-          </ListItem>
-          <ListItem onClick={handleDrawerToggle}>
-            <ListItemText primary="Oferta" />
-          </ListItem>
-          <ListItem onClick={handleDrawerToggle}>
-            <ListItemText primary="Galeria" />
-          </ListItem>
-          <ListItem onClick={handleDrawerToggle}>
-            <ListItemText primary="Kontakt" />
-          </ListItem>
+          <Link href="#home" passHref>
+            <ListItem onClick={handleDrawerToggle}>
+              <ListItemText primary="Home" />
+            </ListItem>
+          </Link>
+          <Link href="#offer" passHref>
+            <ListItem onClick={handleDrawerToggle}>
+              <ListItemText primary="Oferta" />
+            </ListItem>
+          </Link>
+          <Link href="#about" passHref>
+            <ListItem onClick={handleDrawerToggle}>
+              <ListItemText primary="O nas" />
+            </ListItem>
+          </Link>
+          <Link href="#artist" passHref>
+            <ListItem onClick={handleDrawerToggle}>
+              <ListItemText primary="Artyści" />
+            </ListItem>
+          </Link>
+          <Link href="#gallery" passHref>
+            <ListItem onClick={handleDrawerToggle}>
+              <ListItemText primary="Galeria" />
+            </ListItem>
+          </Link>
+          <Link href="#movies" passHref>
+            <ListItem onClick={handleDrawerToggle}>
+              <ListItemText primary="Filmy" />
+            </ListItem>
+          </Link>
+          <Link href="#contact" passHref>
+            <ListItem onClick={handleDrawerToggle}>
+              <ListItemText primary="Kontakt" />
+            </ListItem>
+          </Link>
         </List>
       </Drawer>
     </AppBar>

@@ -4,17 +4,17 @@ import React from 'react'
 const PhotoComponent = () => {
   return (
     <Box    sx={{
-        height: '70vh',
+        height: {sm: '70vh', xs: '300px'},
         backgroundImage: 'url(/1.jpg)',
         backgroundSize: 'contain',
         backgroundPosition: 'center',
+        backgroundPositionY: 'top',
         backgroundRepeat: 'no-repeat',
         display: 'flex',
         color: 'white',
         flexDirection: 'column',
         backgroundColor: 'rgb(23, 19, 20)',
       }}>
-
     </Box>
   )
 }

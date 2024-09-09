@@ -24,7 +24,7 @@ const Events = () => {
   };
 
   return (
-    <Box id='events'>
+    <Box id='offer'>
       <Grid minHeight={'100vh'} container sx={{ animation: '1s showAnim forwards', my: '50px' }}>
         <Grid xs={12} lg={6} item display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
           <Box sx={{ bgcolor: 'rgba(23, 19, 20, .7)', margin: '8px', borderRadius: '5px' }}>

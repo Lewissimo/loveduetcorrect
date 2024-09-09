@@ -116,7 +116,7 @@ const Musicians = () => {
   };
 
   return (
-    <Box id='musicians' sx={{        height: '100vh', display: 'flex', alignItems: 'center', bgcolor: 'white', justifyContent: 'center'
+    <Box id='artist' sx={{        height: '100vh', display: 'flex', alignItems: 'center', bgcolor: 'white', justifyContent: 'center'
     }}>
 
     <Box
