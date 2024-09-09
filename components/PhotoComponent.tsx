@@ -4,7 +4,7 @@ import React from 'react'
 const PhotoComponent = () => {
   return (
     <Box    sx={{
-        height: '100vh',
+        height: '70vh',
         backgroundImage: 'url(/1.jpg)',
         backgroundSize: 'contain',
         backgroundPosition: 'center',

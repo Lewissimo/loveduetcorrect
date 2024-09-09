@@ -11,12 +11,12 @@ import Image from 'next/image';
 import { Box } from '@mui/material';
 
 const images = [
-  '/slide1.jpg',  // Ensure these are accessible URLs
+  '/slide1.jpg',  
   '/slide2.jpg',
   '/slide3.jpg',
 ];
 
-const GallerySlider: React.FC = () => {
+const GallerySlider = ({type, backFunction}: {type: 'scene' | 'studio' | null, backFunction:(element: null | 'scene' | 'studio') => void}) => {
   const [open, setOpen] = useState<boolean>(false);
   const [currentImage, setCurrentImage] = useState<number>(0);
 
@@ -39,7 +39,7 @@ const GallerySlider: React.FC = () => {
     return (
       <IconButton
         onClick={onClick}
-        style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', zIndex: 1, color: 'black' }}
+        style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', zIndex: 1, color: 'white' }}
       >
         <ArrowBackIosNewIcon sx={{color:'white'}}/>
       </IconButton>
@@ -48,7 +48,6 @@ const GallerySlider: React.FC = () => {
 
   const settings = {
     dots: true,
-    
     infinite: true,
     speed: 500,
     slidesToShow: 3,
@@ -71,20 +70,28 @@ const GallerySlider: React.FC = () => {
   const handlePrev = () => setCurrentImage((currentImage + images.length - 1) % images.length);
   const handleClose = () => setOpen(false);
   const handleImageClick = (index: number) => {
-    console.log(`Image ${index} clicked.`);
     setCurrentImage(index);
     setOpen(true);
   };
 
   return (
     <Box>
+      <IconButton
+
+        onClick={() => backFunction(null)} 
+        style={{ position: 'absolute', left: 16, top: 16, zIndex: 10, color: 'white' }}
+      >
+        <ArrowBackIosNewIcon sx={{ color: 'white' }} />
+      </IconButton>
+
       <Slider {...settings}>
         {images.map((img, index) => (
-          <Box height={'700px'} padding={'30px'} display={'flex !important'} justifyContent={'center'} alignItems={'center'}  key={index} onClick={() => handleImageClick(index)} >
+          <Box height={'700px'} padding={'30px'} display={'flex !important'} justifyContent={'center'} alignItems={'center'} key={index} onClick={() => handleImageClick(index)}>
             <Image src={img} alt={`Slide ${index}`} width={300} height={200} layout='responsive' />
           </Box>
         ))}
       </Slider>
+
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
         <IconButton onClick={handleClose} style={{ position: 'absolute', right: 8, top: 8, color: 'white' }}>
           <CloseIcon />

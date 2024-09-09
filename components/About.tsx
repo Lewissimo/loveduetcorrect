@@ -2,6 +2,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
 import AboutDetails from './AboutDetails';
 import { section_ } from './exData';
+import Link from 'next/link';
 
 type section = {
   title: string;
@@ -57,7 +58,7 @@ const About: React.FC = () => {
           </Typography>
             ))
           }
-          <span style={{color: 'blue', cursor: 'pointer'}} onClick={()=>{setDetails(<AboutDetails title={element.title} text={element.textDetailsParagraphs} backFunction={handleCheckDetails}/>)}}>...więcej</span>
+          <Link href={'#about'} style={{color: 'blue', cursor: 'pointer'}} onClick={()=>{setDetails(<AboutDetails title={element.title} text={element.textDetailsParagraphs} backFunction={handleCheckDetails}/>)}}>...więcej</Link>
         </Grid>
           ))
         }

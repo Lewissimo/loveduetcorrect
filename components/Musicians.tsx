@@ -116,7 +116,7 @@ const Musicians = () => {
   };
 
   return (
-    <Box sx={{        height: '100vh', display: 'flex', alignItems: 'center', bgcolor: 'white', justifyContent: 'center'
+    <Box id='musicians' sx={{        height: '100vh', display: 'flex', alignItems: 'center', bgcolor: 'white', justifyContent: 'center'
     }}>
 
     <Box
@@ -148,7 +148,7 @@ const Musicians = () => {
             color="primary"
             onClick={toggleMusicians}
             fullWidth
-            
+            href='#musicians'
             sx={{fontSize: '1.4em', borderRadius: '25px'}}
             >
             {showMusicians ? 'Zwiń' : 'Rozwiń'}
