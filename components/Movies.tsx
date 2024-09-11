@@ -6,6 +6,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import dynamic from 'next/dynamic';
+import { moviesType } from '@/context/firebaseDataContext';
 
 const ReactPlayer = dynamic(() => import('react-player/youtube'), {
   ssr: false,
@@ -61,7 +62,7 @@ const PrevArrow: React.FC<ArrowProps> = ({ onClick }) => (
   </IconButton>
 );
 
-const Movies: React.FC = () => {
+const Movies: React.FC<{ moviesData: moviesType[] }> = ({moviesData}) => {
   const settings: Settings = {
     dots: true,
     infinite: true,
@@ -76,7 +77,7 @@ const Movies: React.FC = () => {
     <Box height={'100vh'} display={'flex'} flexDirection={'column'} bgcolor={'rgb(23, 19, 20)'} id='movies'>
       <Box sx={{ width: '80%', margin: 'auto', paddingTop: '20px' }}>
         <Slider {...settings}>
-          {videoUrls.map((url, index) => (
+          {moviesData.map((url, index) => (
             <Box
               key={index}
               sx={{
@@ -86,7 +87,7 @@ const Movies: React.FC = () => {
               }}
             >
               <ReactPlayer
-                url={url}
+                url={url.paths}
                 width="100%"
                 height="100%"
                 style={{ position: 'absolute', top: 0, left: 0 }}

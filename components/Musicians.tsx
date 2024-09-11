@@ -1,114 +1,9 @@
 import { Box, Stack, Container, Typography, Button } from '@mui/material';
 import React, { useState } from 'react';
 import PersonCard from './PersonalCard';
+import { artistsType } from '@/context/firebaseDataContext';
 
-const musiciansTab = [
-    {
-        name: 'Dorota Witz',
-        instrument: 'wokal',
-        photo: '/photography.jpg',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, ut.'
-    },
-    {
-        name: 'Dorota Witz',
-        instrument: 'wokal',
-        photo: '/photography.jpg',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, ut.'
-    },
-    {
-        name: 'Dorota Witz',
-        instrument: 'wokal',
-        photo: '/photography.jpg',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, ut.'
-    },
-    {
-        name: 'Dorota Witz',
-        instrument: 'wokal',
-        photo: '/photography.jpg',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, ut.'
-    },
-    {
-        name: 'Dorota Witz',
-        instrument: 'wokal',
-        photo: '/photography.jpg',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, ut.'
-    },
-    {
-        name: 'Dorota Witz',
-        instrument: 'wokal',
-        photo: '/photography.jpg',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, ut.'
-    },
-    {
-        name: 'Dorota Witz',
-        instrument: 'wokal',
-        photo: '/photography.jpg',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, ut.Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, utLorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, utLorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, utLorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, utLorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, utLorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, ut'
-    },
-    {
-        name: 'Dorota Witz',
-        instrument: 'wokal',
-        photo: '/photography.jpg',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, ut.'
-    },
-    {
-        name: 'Dorota Witz',
-        instrument: 'wokal',
-        photo: '/photography.jpg',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, ut.'
-    },
-    {
-        name: 'Dorota Witz',
-        instrument: 'wokal',
-        photo: '/photography.jpg',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, ut.'
-    },
-    {
-        name: 'Dorota Witz',
-        instrument: 'wokal',
-        photo: '/photography.jpg',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, ut.'
-    },
-    {
-        name: 'Dorota Witz',
-        instrument: 'wokal',
-        photo: '/photography.jpg',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, ut.'
-    },
-    {
-        name: 'Dorota Witz',
-        instrument: 'wokal',
-        photo: '/photography.jpg',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, ut.'
-    },
-    {
-        name: 'Dorota Witz',
-        instrument: 'wokal',
-        photo: '/photography.jpg',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, ut.'
-    },
-    {
-        name: 'Dorota Witz',
-        instrument: 'wokal',
-        photo: '/photography.jpg',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, ut.'
-    },
-    {
-        name: 'Dorota Witz',
-        instrument: 'wokal',
-        photo: '/photography.jpg',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, ut.'
-    },
-    {
-        name: 'Dorota Witz',
-        instrument: 'wokal',
-        photo: '/photography.jpg',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, ut.Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, utLorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, utLorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, utLorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, utLorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, utLorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit possimus dolorem, error exercitationem culpa nostrum dolorum velit tempora sint nam saepe doloremque magnam porro dignissimos nesciunt illum placeat! Deleniti, ut'
-    }
-
-]
-
-const Musicians = () => {
+const Musicians:React.FC<{ artistsData: artistsType[] }> = ({artistsData}) => {
   const [showMusicians, setShowMusicians] = useState(false);
 
   const toggleMusicians = () => {
@@ -157,7 +52,7 @@ const Musicians = () => {
 
         {showMusicians && (
             <Stack spacing={4}>
-            {musiciansTab.map((element, index) => (
+            {artistsData.map((element, index) => (
                 <Box
                 key={index}
                 display="flex"
@@ -168,7 +63,7 @@ const Musicians = () => {
                 <PersonCard
                   photo={element.photo}
                   name={element.name}
-                  role={element.instrument}
+                  role={element.role}
                   description={element.description}
                   />
               </Box>

@@ -9,14 +9,11 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Image from 'next/image';
 import { Box } from '@mui/material';
+import { galeryType } from '@/context/firebaseDataContext';
 
-const images = [
-  '/slide1.jpg',  
-  '/slide2.jpg',
-  '/slide3.jpg',
-];
 
-const GallerySlider = ({type, backFunction}: {type: 'scene' | 'studio' | null, backFunction:(element: null | 'scene' | 'studio') => void}) => {
+
+const GallerySlider = ({data, backFunction}: {data: string[], backFunction:(element: null | number) => void}) => {
   const [open, setOpen] = useState<boolean>(false);
   const [currentImage, setCurrentImage] = useState<number>(0);
 
@@ -66,8 +63,8 @@ const GallerySlider = ({type, backFunction}: {type: 'scene' | 'studio' | null, b
     ],
   };
 
-  const handleNext = () => setCurrentImage((currentImage + 1) % images.length);
-  const handlePrev = () => setCurrentImage((currentImage + images.length - 1) % images.length);
+  const handleNext = () => setCurrentImage((currentImage + 1) % data.length);
+  const handlePrev = () => setCurrentImage((currentImage + data.length - 1) % data.length);
   const handleClose = () => setOpen(false);
   const handleImageClick = (index: number) => {
     setCurrentImage(index);
@@ -76,7 +73,6 @@ const GallerySlider = ({type, backFunction}: {type: 'scene' | 'studio' | null, b
 
   return (
     <Box>
-      {type === 'scene' ? 's' : 'w'}
       <IconButton
 
         onClick={() => backFunction(null)} 
@@ -86,7 +82,7 @@ const GallerySlider = ({type, backFunction}: {type: 'scene' | 'studio' | null, b
       </IconButton>
 
       <Slider {...settings}>
-        {images.map((img, index) => (
+        {data.map((img, index) => (
           <Box height={'700px'} padding={'30px'} display={'flex !important'} justifyContent={'center'} alignItems={'center'} key={index} onClick={() => handleImageClick(index)}>
             <Image src={img} alt={`Slide ${index}`} width={300} height={200} layout='responsive' />
           </Box>
@@ -104,7 +100,7 @@ const GallerySlider = ({type, backFunction}: {type: 'scene' | 'studio' | null, b
         </IconButton>
         <div style={{ width: '100%', height: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
           <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-            <Image src={images[currentImage]} alt={`Gallery image ${currentImage}`} layout='fill' objectFit='contain' />
+            <Image src={data[currentImage]} alt={`Gallery image ${currentImage}`} layout='fill' objectFit='contain' />
           </div>
         </div>
       </Dialog>

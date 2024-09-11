@@ -3,23 +3,12 @@ import { Box, Grid, Typography } from '@mui/material';
 import AboutDetails from './AboutDetails';
 import { section_ } from './exData';
 import Link from 'next/link';
+import { aboutType } from '@/context/firebaseDataContext';
 
-type section = {
-  title: string;
-  textIntroParagraphs: string[];
-  textDetailsParagraphs: string[];
-}
-
-
-
-const About: React.FC = () => {
-  const [sections, setSections] = useState<section[]>([]);
+const About: React.FC<{ aboutData: aboutType[]; }> = ({aboutData}) => {
   const [details, setDetails] = useState<ReactNode | null>(null);
 
-  useEffect(()=>{
-    setSections(section_);
-  }, [section_]);
-
+ 
   const handleCheckDetails = (value: ReactNode | null) => { 
     setDetails(value);
   }
@@ -44,21 +33,21 @@ const About: React.FC = () => {
       :
         <Grid container spacing={4} maxWidth="lg" sx={{animation: '1s showAnim forwards'}}>
         {
-          sections.map((element, index) => (
+          aboutData.map((element, index) => (
 
         <Grid key={index} item xs={12} md={6}>
           <Typography variant="h4" gutterBottom>
-            {element.title}
+            {element.name}
           </Typography>
           {
-            element.textIntroParagraphs.map(element => (
+            element.details.map(element => (
 
           <Typography variant="body1" paragraph key={index}>
             {element}
           </Typography>
             ))
           }
-          <Link href={'#about'} style={{color: 'blue', cursor: 'pointer'}} onClick={()=>{setDetails(<AboutDetails title={element.title} text={element.textDetailsParagraphs} backFunction={handleCheckDetails}/>)}}>...więcej</Link>
+          <Link href={'#about'} style={{color: 'blue', cursor: 'pointer'}} onClick={()=>{setDetails(<AboutDetails title={element.name} text={element.details} backFunction={handleCheckDetails}/>)}}>...więcej</Link>
         </Grid>
           ))
         }

@@ -2,19 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Box, Grid, List, ListItemButton, ListItemText, Typography, Button } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { example } from './exEvents';
-interface EventItem {
-  eventTitle: string;
-  date: string;
-  descriptionParagraphs: string[];
-  photo: string | null;
-}
+import { eventsType } from '@/context/firebaseDataContext';
 
-const Events = () => {
-  const [events, setEvents] = useState<EventItem[]>([]);
 
-  useEffect(() => {
-    setEvents(example);
-  }, []);
+const Events:React.FC<{eventsData: eventsType[]}> = ({eventsData}) => {
+
 
   const handleDownloadOffer = () => {
     const link = document.createElement('a');
@@ -32,7 +24,7 @@ const Events = () => {
               Zobacz najbliższe wydarzenia:
             </Typography>
             <List>
-              {events.map((item, index) => (
+              {eventsData.map((item, index) => (
                 <ListItemButton
                   key={index}
                   href='https://www.facebook.com/'
@@ -46,7 +38,7 @@ const Events = () => {
                   <ListItemText
                     primary={
                       <Typography sx={{ color: 'white' }}>
-                        {item.eventTitle}
+                        {item.name}
                       </Typography>
                     }
                     secondary={

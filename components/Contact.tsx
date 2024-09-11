@@ -3,8 +3,9 @@ import { Box, Typography, Grid, Card, CardContent } from '@mui/material';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import FacebookIcon from '@mui/icons-material/Facebook';
+import { contactType } from '@/context/firebaseDataContext';
 
-const Contact: React.FC = () => {
+const Contact: React.FC<{ contactData: contactType[] }> = ({contactData}) => {
   return (
     <Box
       id="contact"
@@ -18,7 +19,9 @@ const Contact: React.FC = () => {
       }}
     >
       <Grid container spacing={4} maxWidth="lg">
-        <Grid item xs={12} md={6}>
+          {contactData.map((element, index) =>(
+
+            <Grid item xs={12} md={6} key={index}>
           <Card
             sx={{
               boxShadow: 3,
@@ -26,13 +29,13 @@ const Contact: React.FC = () => {
               padding: '20px',
               backgroundColor: '#ffffff',
             }}
-          >
+            >
             <CardContent>
               <Box display="flex" flexDirection="column" alignItems="center" marginBottom="20px">
                 <Box
                   component="img"
-                  src="photography.jpg"
-                  alt="Dorota Ritz"
+                  src={element.phone}
+                  alt="photo error"
                   sx={{
                     width: 150,
                     height: 150,
@@ -40,30 +43,30 @@ const Contact: React.FC = () => {
                     borderRadius: '50%',
                     marginBottom: '20px',
                   }}
-                />
+                  />
                 <Typography variant="h5" component="div" gutterBottom>
-                  Dorota Ritz
+                  {element.name}
                 </Typography>
               </Box>
 
               <Box display="flex" alignItems="center" marginBottom="10px">
                 <EmailIcon sx={{ marginRight: '10px', color: '#1976d2' }} />
                 <Typography variant="body1">
-                  <a href="mailto:dorotaritz.operetka@int.pl" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    dorotaritz.operetka@int.pl
+                  <a href={`mailto:${element.mail}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    {element.mail}
                   </a>
                 </Typography>
               </Box>
 
               <Box display="flex" alignItems="center" marginBottom="10px">
                 <PhoneIcon sx={{ marginRight: '10px', color: '#1976d2' }} />
-                <Typography variant="body1">537 568 422</Typography>
+                <Typography variant="body1">{element.phone}</Typography>
               </Box>
 
               <Box display="flex" alignItems="center">
                 <FacebookIcon sx={{ marginRight: '10px', color: '#3b5998' }} />
                 <Typography variant="body1">
-                  <a href="https://facebook.com/dorota.ritz" style={{ textDecoration: 'none', color: 'inherit' }} target="_blank" rel="noopener noreferrer">
+                  <a href={element.fbPath} style={{ textDecoration: 'none', color: 'inherit' }} target="_blank" rel="noopener noreferrer">
                     Facebook
                   </a>
                 </Typography>
@@ -71,60 +74,9 @@ const Contact: React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
-
-        <Grid item xs={12} md={6}>
-          <Card
-            sx={{
-              boxShadow: 3,
-              borderRadius: '15px',
-              padding: '20px',
-              backgroundColor: '#ffffff',
-            }}
-          >
-            <CardContent>
-              <Box display="flex" flexDirection="column" alignItems="center" marginBottom="20px">
-                <Box
-                  component="img"
-                  src="/pawel.jpg"
-                  alt="Paweł Wisnar"
-                  sx={{
-                    width: 150,
-                    height: 150,
-                    objectFit: 'cover',
-                    borderRadius: '50%',
-                    marginBottom: '20px',
-                  }}
-                />
-                <Typography variant="h5" component="div" gutterBottom>
-                  Paweł Wisnar
-                </Typography>
-              </Box>
-
-              <Box display="flex" alignItems="center" marginBottom="10px">
-                <EmailIcon sx={{ marginRight: '10px', color: '#1976d2' }} />
-                <Typography variant="body1">
-                  <a href="mailto:pawelwisnar.operetka@int.pl" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    pawelwisnar.operetka@int.pl
-                  </a>
-                </Typography>
-              </Box>
-
-              <Box display="flex" alignItems="center" marginBottom="10px">
-                <PhoneIcon sx={{ marginRight: '10px', color: '#1976d2' }} />
-                <Typography variant="body1">792 077 279</Typography>
-              </Box>
-
-              <Box display="flex" alignItems="center">
-                <FacebookIcon sx={{ marginRight: '10px', color: '#3b5998' }} />
-                <Typography variant="body1">
-                  <a href="https://facebook.com/pawel.wisnar" style={{ textDecoration: 'none', color: 'inherit' }} target="_blank" rel="noopener noreferrer">
-                    Facebook
-                  </a>
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
+        ))
+             }     
+        
       </Grid>
     </Box>
   );
