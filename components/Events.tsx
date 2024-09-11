@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react';
 import { Box, Grid, List, ListItemButton, ListItemText, Typography, Button } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { example } from './exEvents';
 import { eventsType } from '@/context/firebaseDataContext';
 
 
@@ -17,9 +15,10 @@ const Events:React.FC<{eventsData: eventsType[]}> = ({eventsData}) => {
 
   return (
     <Box id='offer'>
+
       <Grid minHeight={'100vh'} container sx={{ animation: '1s showAnim forwards', my: '50px' }}>
         <Grid xs={12} lg={6} item display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
-          <Box sx={{ bgcolor: 'rgba(23, 19, 20, .7)', margin: '8px', borderRadius: '5px' }}>
+          <Box sx={{ bgcolor: 'rgba(23, 19, 20, .7)', margin: '8px', borderRadius: '25px', padding: '20px' }}>
             <Typography variant="h4" gutterBottom>
               Zobacz najbliższe wydarzenia:
             </Typography>
@@ -66,7 +65,7 @@ const Events:React.FC<{eventsData: eventsType[]}> = ({eventsData}) => {
                 maxHeight: '300px',
                 maxWidth: '100%',
                 marginBottom: '20px',
-                borderRadius: '5px',
+                borderRadius: '25px',
                 boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
               }}
               alt="Oferta"
@@ -76,6 +75,7 @@ const Events:React.FC<{eventsData: eventsType[]}> = ({eventsData}) => {
             <Button
               variant="contained"
               color="primary"
+              sx={{borderRadius: '25px'}}
               onClick={handleDownloadOffer}
             >
               Pobierz ofertę

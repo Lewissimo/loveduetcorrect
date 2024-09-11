@@ -34,8 +34,8 @@ const PersonCard: React.FC<PersonCardProps> = ({ photo, name, role, description,
           spacing={2}
           sx={{
             flexDirection: {
-              xs: 'column', // Stack on small screens
-              sm: 'row', // Side-by-side on larger screens
+              xs: 'column',
+              sm: 'row',
             },
           }}
         >

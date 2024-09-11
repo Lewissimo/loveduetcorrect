@@ -11,12 +11,13 @@ const Galery:React.FC<{ galeryData: galeryType[] }> = ({galeryData}) => {
       {
         type !== null ? <GallerySlider data={galeryData[type].paths} backFunction={setType} />
         :
-        galeryData.map((element, index) => (
-  
-          <Grid container spacing={2} key={index} sx={{ fontSize: '1.9em', cursor: 'pointer' }}>
-          <Grid item xs={12} sm={6} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        
+        <Grid container spacing={2}  sx={{ fontSize: '1.9em', cursor: 'pointer' }}>
+            {galeryData.map((element, index) => (
+          <Grid item xs={12} key={index} sm={6} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Button 
-              variant="contained" 
+            href='#gallery'
+              variant="outlined" 
               color="primary" 
               onClick={() => setType(index)}
               sx={{ fontSize: '1.2em', width: '300px' }}
@@ -24,8 +25,9 @@ const Galery:React.FC<{ galeryData: galeryType[] }> = ({galeryData}) => {
               {element.name}
             </Button>
           </Grid>
-        </Grid>
         ))
+      }
+        </Grid>
             } 
     </Box>
   );

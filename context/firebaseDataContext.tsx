@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '@/firebase/firebase';
+import { getDownloadURL, ref } from 'firebase/storage';
+import { db, storage } from '@/firebase/firebase'; // dodaj tutaj storage
 
 export type intro = {
   logo: string;
@@ -20,7 +21,7 @@ export type offerType = {
 
 export type aboutType = {
   name: string;
-  intro: string;
+  introText: string;
   details: string[];
 };
 
@@ -45,7 +46,7 @@ export type contactType = {
   phone: string;
   mail: string;
   fbPath: string;
-  photo: string
+  photo: string;
 };
 
 interface FirebaseDataContextType {
@@ -73,6 +74,17 @@ interface FirebaseDataProviderProps {
   children: ReactNode;
 }
 
+const getImageURL = async (path: string): Promise<string> => {
+  try {
+    if (!path) return '';
+    const imageRef = ref(storage, path);
+    return await getDownloadURL(imageRef);
+  } catch (error) {
+    console.error(`Błąd pobierania obrazu dla ścieżki: ${path}`, error);
+    return '';
+  }
+};
+
 export const FirebaseDataProvider: React.FC<FirebaseDataProviderProps> = ({ children }) => {
   const [introData, setIntroData] = useState<intro[]>([]);
   const [eventsData, setEventsData] = useState<eventsType[]>([]);
@@ -87,90 +99,108 @@ export const FirebaseDataProvider: React.FC<FirebaseDataProviderProps> = ({ chil
     const fetchData = async () => {
       try {
         const introSnapshot = await getDocs(collection(db, 'Intro'));
-        const introDocuments = introSnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            logo: data.logo || '',
-            portrait: data.portrait || ''
-          } as intro;
-        });
+        const introDocuments = await Promise.all(
+          introSnapshot.docs.map(async (doc) => {
+            const data = doc.data();
+            return {
+              logo: await getImageURL(data.logo),
+              portrait: await getImageURL(data.portrait)
+            } as intro;
+          })
+        );
         setIntroData(introDocuments);
-        
+
         const eventsSnapshot = await getDocs(collection(db, 'Events'));
-        const eventsDocuments = eventsSnapshot.docs.map(doc => {
+        const eventsDocuments = eventsSnapshot.docs.map((doc) => {
           const data = doc.data();
           return {
             name: data.name || '',
             date: data.date || '',
-            path: data.path || '' 
+            path: data.path || ''
           } as eventsType;
         });
         setEventsData(eventsDocuments);
-        
+
         const offerSnapshot = await getDocs(collection(db, 'offer'));
-        const offerDocuments = offerSnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            photoPath: data.photoPath || '',
-            pathPDF: data.pathPDF || ''
-          } as offerType;
-        });
+        const offerDocuments = await Promise.all(
+          offerSnapshot.docs.map(async (doc) => {
+            const data = doc.data();
+            return {
+              photoPath: await getImageURL(data.photoPath),
+              pathPDF: data.pathPDF || ''
+            } as offerType;
+          })
+        );
         setOfferData(offerDocuments);
-        
+
         const aboutSnapshot = await getDocs(collection(db, 'about'));
-        const aboutDocuments = aboutSnapshot.docs.map(doc => {
+        const aboutDocuments = aboutSnapshot.docs.map((doc) => {
           const data = doc.data();
           return {
-            name: data.name || '',
-            intro: data.intro || '',
+            name: data.title || '',
+            introText: data.introText || '',
             details: data.details || ''
           } as aboutType;
         });
         setAboutData(aboutDocuments);
-        
-        const artistsSnapshot = await getDocs(collection(db, 'artists'));
-        const artistsDocuments = artistsSnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            name: data.name || '',
-            role: data.role || '',
-            photo: data.photo || '',
-            description: data.description || ''
-          } as artistsType;
-        });
-        setArtistsData(artistsDocuments);
-        
-        const galerySnapshot = await getDocs(collection(db, 'photoSections'));
-        const galeryDocuments = galerySnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            name: data.name || '',
-            paths: data.paths || []
-          } as galeryType;
-        });
-        setGaleryData(galeryDocuments);
-        
-        const moviesSnapshot = await getDocs(collection(db, 'movies'));
-        const moviesDocuments = moviesSnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            paths: data.paths || []
-          } as moviesType;
-        });
-        setMoviesData(moviesDocuments);
-        
-        const contactSnapshot = await getDocs(collection(db, 'contactData'));
-        const contactDocuments = contactSnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            name: data.name || '',
-            phone: data.phone || '',
-            mail: data.mail || '',
-            fbPath: data.fbPath || ''
-          } as contactType;
-        });
-        setContactData(contactDocuments);
 
+        const artistsSnapshot = await getDocs(collection(db, 'artists'));
+        const artistsDocuments = await Promise.all(
+          artistsSnapshot.docs.map(async (doc) => {
+            const data = doc.data();
+            return {
+              name: data.name || '',
+              role: data.role || '',
+              photo: await getImageURL(data.photo),
+              description: data.description || ''
+            } as artistsType;
+          })
+        );
+        setArtistsData(artistsDocuments);
+
+        const galerySnapshot = await getDocs(collection(db, 'photoSections'));
+        const galeryDocuments = await Promise.all(
+          galerySnapshot.docs.map(async (doc) => {
+            const data = doc.data();
+            const paths = await Promise.all(
+              data.paths.map((path: string) => getImageURL(path))
+            );
+            return {
+              name: data.name || '',
+              paths
+            } as galeryType;
+          })
+        );
+        console.log(galeryDocuments)
+        setGaleryData(galeryDocuments);
+
+        const moviesSnapshot = await getDocs(collection(db, 'movies'));
+        const moviesDocuments = await Promise.all(
+          moviesSnapshot.docs.map(async (doc) => {
+            const data = doc.data();
+            const paths = data.paths
+            return {
+              paths
+            } as moviesType;
+          })
+        );
+        setMoviesData(moviesDocuments);
+
+        const contactSnapshot = await getDocs(collection(db, 'contactData'));
+        const contactDocuments = await Promise.all(
+          contactSnapshot.docs.map(async (doc) => {
+            const data = doc.data();
+            return {
+              name: data.name || '',
+              phone: data.phone || '',
+              mail: data.mail || '',
+              fbPath: data.fbPath || '',
+              photo: await getImageURL(data.photo)
+            } as contactType;
+          })
+        );
+        console.log(contactDocuments);
+        setContactData(contactDocuments);
       } catch (error) {
         console.error('Błąd przy pobieraniu danych z Firestore: ', error);
       }

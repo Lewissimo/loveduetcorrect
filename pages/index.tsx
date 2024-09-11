@@ -8,6 +8,8 @@ import Musicians from "@/components/Musicians";
 import PhotoComponent from "@/components/PhotoComponent";
 import { useFirebaseData } from "@/context/firebaseDataContext";
 import { useState, useEffect } from "react";
+import { Box } from "@mui/material";
+import Image from "next/image";
 
 export default function Home() {
   const {
@@ -48,18 +50,18 @@ export default function Home() {
   ]);
 
   if (loading) {
-    return <div>Ładowanie danych...</div>;
+    return <Box sx={{display: 'flex', width: '100vw', height: '100vh', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}><Image src={'/loadingGIF.gif'} width={300} height={200} alt="Ładowanie danych"/><span>Ładowanie</span></Box>;
   }
 
   return (
     <>
-      <MainPage introData={introData} /> {/* Przekazujemy dane jako propsy */}
-      <PhotoComponent galeryData={galeryData} />
-      <Events eventsData={eventsData} />
+      <MainPage introData={introData} />
+      <PhotoComponent introData={introData} />
       <About aboutData={aboutData} />
+      <Events eventsData={eventsData} />
       <Musicians artistsData={artistsData} />
       <Galery galeryData={galeryData} />
-      <Movies moviesData={moviesData} />
+      <Movies moviesData={moviesData[0]} />
       <Contact contactData={contactData} />
     </>
   );

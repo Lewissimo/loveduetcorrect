@@ -34,7 +34,7 @@ const Contact: React.FC<{ contactData: contactType[] }> = ({contactData}) => {
               <Box display="flex" flexDirection="column" alignItems="center" marginBottom="20px">
                 <Box
                   component="img"
-                  src={element.phone}
+                  src={element.photo}
                   alt="photo error"
                   sx={{
                     width: 150,

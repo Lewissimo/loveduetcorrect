@@ -9,11 +9,12 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Image from 'next/image';
 import { Box } from '@mui/material';
-import { galeryType } from '@/context/firebaseDataContext';
 
 
 
 const GallerySlider = ({data, backFunction}: {data: string[], backFunction:(element: null | number) => void}) => {
+
+  console.log(data);
   const [open, setOpen] = useState<boolean>(false);
   const [currentImage, setCurrentImage] = useState<number>(0);
 

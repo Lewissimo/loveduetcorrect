@@ -1,7 +1,6 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
 import AboutDetails from './AboutDetails';
-import { section_ } from './exData';
 import Link from 'next/link';
 import { aboutType } from '@/context/firebaseDataContext';
 
@@ -39,14 +38,14 @@ const About: React.FC<{ aboutData: aboutType[]; }> = ({aboutData}) => {
           <Typography variant="h4" gutterBottom>
             {element.name}
           </Typography>
-          {
-            element.details.map(element => (
+          
+            
 
-          <Typography variant="body1" paragraph key={index}>
-            {element}
+          <Typography variant="body1" paragraph>
+            {element.introText}
           </Typography>
-            ))
-          }
+            
+          
           <Link href={'#about'} style={{color: 'blue', cursor: 'pointer'}} onClick={()=>{setDetails(<AboutDetails title={element.name} text={element.details} backFunction={handleCheckDetails}/>)}}>...więcej</Link>
         </Grid>
           ))

@@ -10,6 +10,8 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import Link from 'next/link';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import YouTubeIcon from '@mui/icons-material/YouTube';
 
 const NavBar: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -21,18 +23,16 @@ const NavBar: React.FC = () => {
   };
 
   const menuItems = (
-    <Box sx={{ color: 'white' }}>
+    <Box sx={{ color: 'white', display: 'flex', alignItems: 'center' }}>
       <Link href="#home" passHref>
         <Button color="inherit">Home</Button>
       </Link>
       <Link href="#offer" passHref>
         <Button color="inherit">Oferta</Button>
       </Link>
-
       <Link href="#about" passHref>
         <Button color="inherit">O nas</Button>
       </Link>
-
       <Link href="#artist" passHref>
         <Button color="inherit">Artyści</Button>
       </Link>
@@ -45,6 +45,15 @@ const NavBar: React.FC = () => {
       <Link href="#contact" passHref>
         <Button color="inherit">Kontakt</Button>
       </Link>
+      <Link href="#contact" passHref>
+        <Button color="inherit">Bilety</Button>
+      </Link>
+      <IconButton color="inherit" component={Link} href="#facebook">
+        <FacebookIcon sx={{ color: 'white' }} />
+      </IconButton>
+      <IconButton color="inherit" component={Link} href="#youtube">
+        <YouTubeIcon sx={{ color: 'white' }} />
+      </IconButton>
     </Box>
   );
 
@@ -105,6 +114,19 @@ const NavBar: React.FC = () => {
               <ListItemText primary="Kontakt" />
             </ListItem>
           </Link>
+          <Link href="#contact" passHref>
+            <ListItem onClick={handleDrawerToggle}>
+              <ListItemText primary="Bilety" />
+            </ListItem>
+          </Link>
+          <ListItem onClick={handleDrawerToggle}>
+            <IconButton color="inherit" component={Link} href="#facebook">
+              <FacebookIcon />
+            </IconButton>
+            <IconButton color="inherit" component={Link} href="#youtube">
+              <YouTubeIcon />
+            </IconButton>
+          </ListItem>
         </List>
       </Drawer>
     </AppBar>
