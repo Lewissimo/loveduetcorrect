@@ -50,11 +50,11 @@ export default function Home() {
   ]);
 
   if (loading) {
-    return <Box sx={{display: 'flex', width: '100vw', height: '100vh', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}><Image src={'/loadingGIF.gif'} width={300} height={200} alt="Ładowanie danych"/><span>Ładowanie</span></Box>;
+    return <Box sx={{display: 'flex', width: '100vw', height: '100vh', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', bgcolor: 'black'}}><Image src={'/loadingGIF.gif'} width={300} height={200} alt="Ładowanie danych"/><span>Ładowanie</span></Box>;
   }
 
   return (
-    <>
+    <Box sx={{bgcolor: 'black'}}>
       <MainPage introData={introData} />
       <PhotoComponent introData={introData} />
       <About aboutData={aboutData} />
@@ -63,6 +63,6 @@ export default function Home() {
       <Galery galeryData={galeryData} />
       <Movies moviesData={moviesData[0]} />
       <Contact contactData={contactData} />
-    </>
+    </Box>
   );
 }
