@@ -19,7 +19,7 @@ const Events:React.FC<{eventsData: eventsType[]}> = ({eventsData}) => {
       <Grid minHeight={'100vh'} container sx={{ animation: '1s showAnim forwards', my: '50px' }}>
         <Grid xs={12} lg={6} item display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
           <Box sx={{ bgcolor: 'rgba(23, 19, 20, .7)', margin: '8px', borderRadius: '25px', padding: '20px' }}>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" gutterBottom color='white'>
               Zobacz najbliższe wydarzenia:
             </Typography>
             <List>
@@ -55,7 +55,7 @@ const Events:React.FC<{eventsData: eventsType[]}> = ({eventsData}) => {
 
         <Grid xs={12} lg={6} item sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
           <Box sx={{ textAlign: 'center', margin: '8px', borderRadius: '5px', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" gutterBottom color='white'>
               Zobacz ofertę
             </Typography>
 
