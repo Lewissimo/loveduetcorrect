@@ -16,6 +16,7 @@ import { aboutType, artistsType, contactType, eventsType, galeryType, intro, mov
 type HomeProps = {
   introData: intro[];
   eventsData: eventsType[];
+  offerData: offerType[];
   aboutData: aboutType[];
   artistsData: artistsType[];
   galeryData: galeryType[];
@@ -122,6 +123,7 @@ export const getStaticProps: GetStaticProps = async () => {
       return {
         introData: introDocuments,
         eventsData: eventsDocuments,
+        offerData: offerDocuments,
         aboutData: aboutDocuments,
         artistsData: artistsDocuments,
         galeryData: galeryDocuments,
@@ -133,6 +135,7 @@ export const getStaticProps: GetStaticProps = async () => {
       return {
         introData: [],
         eventsData: [],
+        offerData: [],
         aboutData: [],
         artistsData: [],
         galeryData: [],
@@ -164,6 +167,7 @@ const getImageURL = async (path: string): Promise<string> => {
 const Home: React.FC<HomeProps> = ({
   introData,
   eventsData,
+  offerData,
   aboutData,
   artistsData,
   galeryData,
@@ -175,7 +179,7 @@ const Home: React.FC<HomeProps> = ({
       <MainPage introData={introData} />
       <PhotoComponent introData={introData} />
       <About aboutData={aboutData} />
-      <Events eventsData={eventsData} />
+      <Events eventsData={eventsData} offerData={offerData} />
       <Musicians artistsData={artistsData} />
       <Galery galeryData={galeryData} />
       <Movies moviesData={moviesData[0]} />
