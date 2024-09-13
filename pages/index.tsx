@@ -24,6 +24,19 @@ type HomeProps = {
   contactData: contactType[];
 };
 
+const getPDFURL = async (path: string): Promise<string> => {
+  try {
+    if (!path) return '';
+    const pdfRef = ref(storage, path);
+    const url = await getDownloadURL(pdfRef);
+    return url;
+  } catch (error) {
+    console.error(`Błąd pobierania pliku PDF dla ścieżki: ${path}`, error);
+    return '';
+  }
+};
+
+
 export const getStaticProps: GetStaticProps = async () => {
   const fetchDataFromFirebase = async () => {
     try {
@@ -52,9 +65,10 @@ export const getStaticProps: GetStaticProps = async () => {
       const offerDocuments = await Promise.all(
         offerSnapshot.docs.map(async (doc) => {
           const data = doc.data();
+          
           return {
-            photoPath: await getImageURL(data.photoPath),
-            pathPDF: data.pathPDF || ''
+            photoPath: await getImageURL(data.photo),
+            pathPDF: await getPDFURL(data.path) || ''
           };
         })
       );
@@ -119,7 +133,7 @@ export const getStaticProps: GetStaticProps = async () => {
           };
         })
       );
-
+      console.log(offerDocuments);
       return {
         introData: introDocuments,
         eventsData: eventsDocuments,
@@ -174,6 +188,7 @@ const Home: React.FC<HomeProps> = ({
   moviesData,
   contactData,
 }) => {
+  console.log(offerData);
   return (
     <Box sx={{ bgcolor: 'black' }}>
       <MainPage introData={introData} />

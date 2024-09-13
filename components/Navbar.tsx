@@ -48,10 +48,10 @@ const NavBar: React.FC = () => {
       <Link href="#contact" passHref>
         <Button color="inherit">Bilety</Button>
       </Link>
-      <IconButton color="inherit" component={Link} href="#facebook">
+      <IconButton color="inherit" component={Link} href="https://www.facebook.com/profile.php?id=61557994065108">
         <FacebookIcon sx={{ color: 'white' }} />
       </IconButton>
-      <IconButton color="inherit" component={Link} href="#youtube">
+      <IconButton color="inherit" component={Link} href="https://www.youtube.com/@pawelwytrazek2005/videos">
         <YouTubeIcon sx={{ color: 'white' }} />
       </IconButton>
     </Box>
@@ -120,10 +120,10 @@ const NavBar: React.FC = () => {
             </ListItem>
           </Link>
           <ListItem onClick={handleDrawerToggle}>
-            <IconButton color="inherit" component={Link} href="#facebook">
+            <IconButton color="inherit" component={Link} href="https://www.facebook.com/profile.php?id=61557994065108">
               <FacebookIcon />
             </IconButton>
-            <IconButton color="inherit" component={Link} href="#youtube">
+            <IconButton color="inherit" component={Link} href="https://www.youtube.com/@pawelwytrazek2005/videos">
               <YouTubeIcon />
             </IconButton>
           </ListItem>

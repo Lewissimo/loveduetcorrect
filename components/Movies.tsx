@@ -126,7 +126,7 @@ const Movies: React.FC<{ moviesData: moviesType }> = ({ moviesData }) => {
                 <Typography
                   variant="subtitle1"
                   sx={{ color: 'white', cursor: 'pointer' }}
-                  onClick={() => window.open('https://www.youtube.com/channel/YOUR_CHANNEL_ID', '_blank')}
+                  onClick={() => window.open('https://www.youtube.com/@pawelwytrazek2005/videos', '_blank')}
                 >
                   Zobacz nasz kanał
                 </Typography>
