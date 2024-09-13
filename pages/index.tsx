@@ -16,7 +16,6 @@ import { aboutType, artistsType, contactType, eventsType, galeryType, intro, mov
 type HomeProps = {
   introData: intro[];
   eventsData: eventsType[];
-  offerData: offerType[];
   aboutData: aboutType[];
   artistsData: artistsType[];
   galeryData: galeryType[];
@@ -123,7 +122,6 @@ export const getStaticProps: GetStaticProps = async () => {
       return {
         introData: introDocuments,
         eventsData: eventsDocuments,
-        offerData: offerDocuments,
         aboutData: aboutDocuments,
         artistsData: artistsDocuments,
         galeryData: galeryDocuments,
@@ -135,7 +133,6 @@ export const getStaticProps: GetStaticProps = async () => {
       return {
         introData: [],
         eventsData: [],
-        offerData: [],
         aboutData: [],
         artistsData: [],
         galeryData: [],
