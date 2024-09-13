@@ -167,7 +167,6 @@ const getImageURL = async (path: string): Promise<string> => {
 const Home: React.FC<HomeProps> = ({
   introData,
   eventsData,
-  offerData,
   aboutData,
   artistsData,
   galeryData,
