@@ -1,3 +1,4 @@
+import { GetStaticProps } from 'next';
 import MainPage from "@/components/Home";
 import About from "@/components/About";
 import Events from "@/components/Events";
@@ -6,55 +7,175 @@ import Movies from "@/components/Movies";
 import Contact from "@/components/Contact";
 import Musicians from "@/components/Musicians";
 import PhotoComponent from "@/components/PhotoComponent";
-import { useFirebaseData } from "@/context/firebaseDataContext";
-import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import Image from "next/image";
+import { db, storage } from '@/firebase/firebase';
+import { collection, getDocs } from 'firebase/firestore';
+import { getDownloadURL, ref } from 'firebase/storage';
+import { aboutType, artistsType, contactType, eventsType, galeryType, intro, moviesType, offerType } from '@/context/firebaseDataContext';
 
-export default function Home() {
-  const {
-    introData,
-    eventsData,
-    offerData,
-    aboutData,
-    artistsData,
-    galeryData,
-    moviesData,
-    contactData,
-  } = useFirebaseData();
+type HomeProps = {
+  introData: intro[];
+  eventsData: eventsType[];
+  offerData: offerType[];
+  aboutData: aboutType[];
+  artistsData: artistsType[];
+  galeryData: galeryType[];
+  moviesData: moviesType[];
+  contactData: contactType[];
+};
 
-  const [loading, setLoading] = useState(true);
+export const getStaticProps: GetStaticProps = async () => {
+  const fetchDataFromFirebase = async () => {
+    try {
+      const introSnapshot = await getDocs(collection(db, 'Intro'));
+      const introDocuments = await Promise.all(
+        introSnapshot.docs.map(async (doc) => {
+          const data = doc.data();
+          return {
+            logo: await getImageURL(data.logo),
+            portrait: await getImageURL(data.portrait)
+          };
+        })
+      );
 
-  useEffect(() => {
-    if (
-      introData.length > 0 &&
-      eventsData.length > 0 &&
-      offerData.length > 0 &&
-      aboutData.length > 0 &&
-      artistsData.length > 0 &&
-      galeryData.length > 0 &&
-      moviesData.length > 0 &&
-      contactData.length > 0
-    ) {
-      setLoading(false);
+      const eventsSnapshot = await getDocs(collection(db, 'Events'));
+      const eventsDocuments = eventsSnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          name: data.name || '',
+          date: data.date || '',
+          path: data.path || ''
+        };
+      });
+
+      const offerSnapshot = await getDocs(collection(db, 'offer'));
+      const offerDocuments = await Promise.all(
+        offerSnapshot.docs.map(async (doc) => {
+          const data = doc.data();
+          return {
+            photoPath: await getImageURL(data.photoPath),
+            pathPDF: data.pathPDF || ''
+          };
+        })
+      );
+
+      const aboutSnapshot = await getDocs(collection(db, 'about'));
+      const aboutDocuments = aboutSnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          name: data.title || '',
+          introText: data.introText || '',
+          details: data.details || ''
+        };
+      });
+
+      const artistsSnapshot = await getDocs(collection(db, 'artists'));
+      const artistsDocuments = await Promise.all(
+        artistsSnapshot.docs.map(async (doc) => {
+          const data = doc.data();
+          return {
+            name: data.name || '',
+            role: data.role || '',
+            photo: await getImageURL(data.photo),
+            description: data.description || ''
+          };
+        })
+      );
+
+      const galerySnapshot = await getDocs(collection(db, 'photoSections'));
+      const galeryDocuments = await Promise.all(
+        galerySnapshot.docs.map(async (doc) => {
+          const data = doc.data();
+          const paths = await Promise.all(
+            data.paths.map((path: string) => getImageURL(path))
+          );
+          return {
+            name: data.name || '',
+            paths
+          };
+        })
+      );
+
+      const moviesSnapshot = await getDocs(collection(db, 'movies'));
+      const moviesDocuments = await Promise.all(
+        moviesSnapshot.docs.map(async (doc) => {
+          const data = doc.data();
+          return {
+            paths: data.paths || []
+          };
+        })
+      );
+
+      const contactSnapshot = await getDocs(collection(db, 'contactData'));
+      const contactDocuments = await Promise.all(
+        contactSnapshot.docs.map(async (doc) => {
+          const data = doc.data();
+          return {
+            name: data.name || '',
+            phone: data.phone || '',
+            mail: data.mail || '',
+            fbPath: data.fbPath || '',
+            photo: await getImageURL(data.photo)
+          };
+        })
+      );
+
+      return {
+        introData: introDocuments,
+        eventsData: eventsDocuments,
+        offerData: offerDocuments,
+        aboutData: aboutDocuments,
+        artistsData: artistsDocuments,
+        galeryData: galeryDocuments,
+        moviesData: moviesDocuments,
+        contactData: contactDocuments,
+      };
+    } catch (error) {
+      console.error('Błąd przy pobieraniu danych z Firebase: ', error);
+      return {
+        introData: [],
+        eventsData: [],
+        offerData: [],
+        aboutData: [],
+        artistsData: [],
+        galeryData: [],
+        moviesData: [],
+        contactData: [],
+      };
     }
-  }, [
-    introData,
-    eventsData,
-    offerData,
-    aboutData,
-    artistsData,
-    galeryData,
-    moviesData,
-    contactData,
-  ]);
+  };
 
-  if (loading) {
-    return <Box sx={{display: 'flex', width: '100vw', height: '100vh', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', bgcolor: 'black'}}><Image src={'/loadingGIF.gif'} width={300} height={200} alt="Ładowanie danych"/><span>Ładowanie</span></Box>;
+  const data = await fetchDataFromFirebase();
+
+  return {
+    props: data,
+    revalidate: 60,
+  };
+};
+
+const getImageURL = async (path: string): Promise<string> => {
+  try {
+    if (!path) return '';
+    const imageRef = ref(storage, path);
+    return await getDownloadURL(imageRef);
+  } catch (error) {
+    console.error(`Błąd pobierania obrazu dla ścieżki: ${path}`, error);
+    return '';
   }
+};
 
+const Home: React.FC<HomeProps> = ({
+  introData,
+  eventsData,
+  offerData,
+  aboutData,
+  artistsData,
+  galeryData,
+  moviesData,
+  contactData,
+}) => {
   return (
-    <Box sx={{bgcolor: 'black'}}>
+    <Box sx={{ bgcolor: 'black' }}>
       <MainPage introData={introData} />
       <PhotoComponent introData={introData} />
       <About aboutData={aboutData} />
@@ -65,4 +186,6 @@ export default function Home() {
       <Contact contactData={contactData} />
     </Box>
   );
-}
+};
+
+export default Home;
