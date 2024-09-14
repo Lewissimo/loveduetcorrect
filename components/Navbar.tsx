@@ -27,11 +27,11 @@ const NavBar: React.FC = () => {
       <Link href="#home" passHref>
         <Button color="inherit">Home</Button>
       </Link>
-      <Link href="#offer" passHref>
-        <Button color="inherit">Oferta</Button>
-      </Link>
       <Link href="#about" passHref>
         <Button color="inherit">O nas</Button>
+      </Link>
+      <Link href="#offer" passHref>
+        <Button color="inherit">Oferta</Button>
       </Link>
       <Link href="#artist" passHref>
         <Button color="inherit">Artyści</Button>
@@ -45,7 +45,7 @@ const NavBar: React.FC = () => {
       <Link href="#contact" passHref>
         <Button color="inherit">Kontakt</Button>
       </Link>
-      <Link href="#contact" passHref>
+      <Link href="https://www.bilety24.pl/szukaj?search=Zagadka+tenora&submit=" passHref>
         <Button color="inherit">Bilety</Button>
       </Link>
       <IconButton color="inherit" component={Link} href="https://www.facebook.com/profile.php?id=61557994065108">
@@ -84,14 +84,14 @@ const NavBar: React.FC = () => {
               <ListItemText primary="Home" />
             </ListItem>
           </Link>
-          <Link href="#offer" passHref>
-            <ListItem onClick={handleDrawerToggle}>
-              <ListItemText primary="Oferta" />
-            </ListItem>
-          </Link>
           <Link href="#about" passHref>
             <ListItem onClick={handleDrawerToggle}>
               <ListItemText primary="O nas" />
+            </ListItem>
+          </Link>
+          <Link href="#offer" passHref>
+            <ListItem onClick={handleDrawerToggle}>
+              <ListItemText primary="Oferta" />
             </ListItem>
           </Link>
           <Link href="#artist" passHref>
@@ -114,7 +114,7 @@ const NavBar: React.FC = () => {
               <ListItemText primary="Kontakt" />
             </ListItem>
           </Link>
-          <Link href="#contact" passHref>
+          <Link href="https://www.bilety24.pl/szukaj?search=Zagadka+tenora&submit=" passHref>
             <ListItem onClick={handleDrawerToggle}>
               <ListItemText primary="Bilety" />
             </ListItem>
