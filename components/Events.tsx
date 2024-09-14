@@ -3,7 +3,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { eventsType, offerType } from '@/context/firebaseDataContext';
 
 
-const Events:React.FC<{eventsData: eventsType[], offerData: offerType[]}> = ({eventsData, offerData}) => {
+const Events: React.FC<{ eventsData: eventsType[], offerData: offerType[] }> = ({ eventsData, offerData }) => {
 
 
   const handleDownloadOffer = () => {
@@ -16,7 +16,7 @@ const Events:React.FC<{eventsData: eventsType[], offerData: offerType[]}> = ({ev
       console.warn('Path to PDF is missing.');
     }
   };
-  
+
   return (
     <Box id='offer'>
       <Grid minHeight={'100vh'} container sx={{ animation: '1s showAnim forwards', my: '50px' }}>
@@ -30,7 +30,7 @@ const Events:React.FC<{eventsData: eventsType[], offerData: offerType[]}> = ({ev
                 {eventsData.map((item, index) => (
                   <ListItemButton
                     key={index}
-                    href='https://www.facebook.com/'
+                    href={item.path}
                     sx={{
                       '&:hover': {
                         backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -45,9 +45,14 @@ const Events:React.FC<{eventsData: eventsType[], offerData: offerType[]}> = ({ev
                         </Typography>
                       }
                       secondary={
-                        <Typography sx={{ color: 'white' }}>
-                          Data: {item.date}
-                        </Typography>
+                        <>
+                          <Typography sx={{ color: 'white' }}>
+                            Data: {item.date}
+                          </Typography>
+                          <Typography sx={{ color: 'white' }}>
+                            Lokalizacja: {item.place}
+                          </Typography>
+                        </>
                       }
                     />
                     <ArrowForwardIosIcon sx={{ color: 'white' }} />
@@ -57,14 +62,14 @@ const Events:React.FC<{eventsData: eventsType[], offerData: offerType[]}> = ({ev
             </Box>
           </Grid>
         )}
-  
+
         {offerData.length > 0 && (
           <Grid xs={12} lg={6} item sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Box sx={{ textAlign: 'center', margin: '8px', borderRadius: '5px', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
               <Typography variant="h4" gutterBottom color='white'>
                 Zobacz ofertę
               </Typography>
-  
+
               <Box
                 component="img"
                 sx={{
@@ -77,7 +82,7 @@ const Events:React.FC<{eventsData: eventsType[], offerData: offerType[]}> = ({ev
                 alt="Oferta"
                 src={offerData[0].photoPath || '/default-image.jpg'}
               />
-  
+
               <Button
                 variant="contained"
                 color="primary"

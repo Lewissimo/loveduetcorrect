@@ -57,7 +57,8 @@ export const getStaticProps: GetStaticProps = async () => {
         return {
           name: data.name || '',
           date: data.date || '',
-          path: data.path || ''
+          path: data.path || '',
+          place: data.place || ''
         };
       });
 

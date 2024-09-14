@@ -12,6 +12,7 @@ export type eventsType = {
   name: string;
   date: string;
   path: string;
+  place: string
 };
 
 export type offerType = {
