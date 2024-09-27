@@ -1,17 +1,18 @@
 import { GetStaticProps } from 'next';
-import MainPage from "@/components/Home";
-import About from "@/components/About";
-import Events from "@/components/Events";
-import Galery from "@/components/Galery";
-import Movies from "@/components/Movies";
-import Contact from "@/components/Contact";
-import Musicians from "@/components/Musicians";
-import PhotoComponent from "@/components/PhotoComponent";
 import { Box } from "@mui/material";
 import { db, storage } from '@/firebase/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { getDownloadURL, ref } from 'firebase/storage';
 import { aboutType, artistsType, contactType, eventsType, galeryType, intro, moviesType, offerType } from '@/context/dataTypes';
+import MainPage from '@/components/admin/Home';
+import PhotoComponent from '@/components/admin/PhotoComponent';
+import About from '@/components/admin/About';
+import Events from '@/components/admin/Events';
+import Musicians from '@/components/admin/Musicians';
+import Galery from '@/components/admin/Galery';
+import Movies from '@/components/admin/Movies';
+import Contact from '@/components/admin/Contact';
+import ProtectedRoute from '@/components/ProtectedRoute';
 
 type HomeProps = {
   introData: intro[];
@@ -35,7 +36,6 @@ const getPDFURL = async (path: string): Promise<string> => {
     return '';
   }
 };
-
 
 export const getStaticProps: GetStaticProps = async () => {
   const fetchDataFromFirebase = async () => {
@@ -91,10 +91,9 @@ export const getStaticProps: GetStaticProps = async () => {
         artistsSnapshot.docs.map(async (doc) => {
           const data = doc.data();
           return {
-            
-            intro: data.intro || '',
             id: doc.id,
             name: data.name || '',
+            intro: data.intro || '',
             role: data.role || '',
             photo: await getImageURL(data.photo),
             description: data.description || ''
@@ -185,6 +184,7 @@ const getImageURL = async (path: string): Promise<string> => {
   }
 };
 
+
 const Home: React.FC<HomeProps> = ({
   introData,
   eventsData,
@@ -197,6 +197,8 @@ const Home: React.FC<HomeProps> = ({
 }) => {
   console.log(offerData);
   return (
+    <ProtectedRoute>
+
     <Box sx={{ bgcolor: 'black' }}>
       <MainPage introData={introData} />
       <PhotoComponent introData={introData} />
@@ -206,7 +208,9 @@ const Home: React.FC<HomeProps> = ({
       <Galery galeryData={galeryData} />
       <Movies moviesData={moviesData[0]} />
       <Contact contactData={contactData} />
+
     </Box>
+    </ProtectedRoute>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import GallerySlider from './GalerySlider';
 import { Box, Grid, Button } from '@mui/material';
-import { galeryType } from '@/context/firebaseDataContext';
+import { galeryType } from '@/context/dataTypes';
 
 const Galery:React.FC<{ galeryData: galeryType[] }> = ({galeryData}) => {
   const [type, setType] = useState<number | null>(null);

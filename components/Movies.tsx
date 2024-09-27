@@ -7,7 +7,7 @@ import YouTubeIcon from '@mui/icons-material/YouTube'; // Import ikony YouTube
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import dynamic from 'next/dynamic';
-import { moviesType } from '@/context/firebaseDataContext';
+import { moviesType } from '@/context/dataTypes';
 
 const ReactPlayer = dynamic(() => import('react-player/youtube'), {
   ssr: false,

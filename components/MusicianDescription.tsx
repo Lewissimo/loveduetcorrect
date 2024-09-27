@@ -26,7 +26,9 @@ const MusiacianDescription = ({ name, text, photo, instrument }: MusiacianDescri
         borderRadius={4}
         bgcolor={''}
         width={300}
-        sx={{outline: 'none', border: 'none',
+        sx={{
+          outline: 'none', 
+          border: 'none',
           transition: '.5s',
           '&:hover': {
             backgroundColor: '#f4f4f4',
@@ -34,8 +36,7 @@ const MusiacianDescription = ({ name, text, photo, instrument }: MusiacianDescri
             cursor: 'pointer'
           }
         }}
-
->
+      >
         <Avatar 
           src={photo} 
           alt={name} 
@@ -53,7 +54,6 @@ const MusiacianDescription = ({ name, text, photo, instrument }: MusiacianDescri
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-title"
-        
         aria-describedby="modal-description"
       >
         <Box 
@@ -67,19 +67,21 @@ const MusiacianDescription = ({ name, text, photo, instrument }: MusiacianDescri
           top="50%"
           left="50%"
           sx={{
-            transform:"translate(-50%, -50%)",
+            transform: "translate(-50%, -50%)",
             color: 'white',
-            outline: 'none'
-
+            outline: 'none',
+            bgcolor: "rgba(0, 0, 0, .6)",
+            p: 4,
+            borderRadius: 2
           }}
-          bgcolor="rgba(0, 0, 0, .6)"
-          p={4}
-          borderRadius={2}
         >
           <Typography id="modal-title" variant="h6" component="h2">
             {name}
           </Typography>
-          <Typography id="modal-description" sx={{ mt: 2 }}>
+          <Typography 
+            id="modal-description" 
+            sx={{ mt: 2, whiteSpace: 'pre-wrap' }}
+          >
             {text}
           </Typography>
           <Box onClick={handleClose} sx={{ mt: 2, color: 'black', cursor:'pointer' }}>

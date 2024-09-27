@@ -6,14 +6,15 @@ interface PersonCardProps {
   photo: string;
   name: string;
   role: string;
+  intro: string;
   description: string;
   email?: string;
   phone?: string;
 }
 
-const PersonCard: React.FC<PersonCardProps> = ({ photo, name, role, description, email, phone }) => {
+const PersonCard: React.FC<PersonCardProps> = ({ photo, name, role, description, email, phone, intro }) => {
   const [open, setOpen] = useState(false);
-
+  const [text, setText] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -73,10 +74,22 @@ const PersonCard: React.FC<PersonCardProps> = ({ photo, name, role, description,
                   📞 Telefon: {phone}
                 </Typography>
               )}
-
-              <Typography variant="body2" color="text.secondary">
-                {description}
+              <Typography variant="body2" color="text.secondary" style={{ whiteSpace: 'pre-line' }}>
+                {text
+                  ? (
+                    <>
+                      {description}
+                      <span style={{ color: 'blue', cursor: 'pointer' }} onClick={() => setText(false)}> mniej</span>
+                    </>
+                  ) : (
+                    <>
+                      {intro}
+                      <span style={{ color: 'blue', cursor: 'pointer' }} onClick={() => setText(true)}> więcej</span>
+                    </>
+                  )
+                }
               </Typography>
+
             </CardContent>
           </Grid>
         </Grid>

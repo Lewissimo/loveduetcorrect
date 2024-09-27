@@ -1,7 +1,7 @@
 import { Box, Stack, Container, Typography, Button } from '@mui/material';
 import React, { useState } from 'react';
 import PersonCard from './PersonalCard';
-import { artistsType } from '@/context/firebaseDataContext';
+import { artistsType } from '@/context/dataTypes';
 
 const Musicians: React.FC<{ artistsData: artistsType[] }> = ({ artistsData }) => {
   const [showMusicians, setShowMusicians] = useState(false);
@@ -65,6 +65,7 @@ const Musicians: React.FC<{ artistsData: artistsType[] }> = ({ artistsData }) =>
 
                 >
                   <PersonCard
+                    intro={element.intro}
                     photo={element.photo}
                     name={element.name}
                     role={element.role}

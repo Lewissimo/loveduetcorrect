@@ -3,7 +3,7 @@ import { Box, Typography, Grid, Card, CardContent } from '@mui/material';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import FacebookIcon from '@mui/icons-material/Facebook';
-import { contactType } from '@/context/firebaseDataContext';
+import { contactType } from '@/context/dataTypes';
 
 const Contact: React.FC<{ contactData: contactType[] }> = ({contactData}) => {
   return (

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box} from '@mui/material';
 import NavBar from './Navbar';
-import { intro } from '@/context/firebaseDataContext';
+import { intro } from '@/context/dataTypes';
 
 
 const MainPage: React.FC<{introData: intro[]}> = ({introData}) => {

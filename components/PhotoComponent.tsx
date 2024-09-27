@@ -1,4 +1,4 @@
-import { intro } from '@/context/firebaseDataContext';
+import { intro } from '@/context/dataTypes';
 import { Box } from '@mui/material';
 import React from 'react';
 

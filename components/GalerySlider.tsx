@@ -14,7 +14,6 @@ import { Box } from '@mui/material';
 
 const GallerySlider = ({data, backFunction}: {data: string[], backFunction:(element: null | number) => void}) => {
 
-  console.log(data);
   const [open, setOpen] = useState<boolean>(false);
   const [currentImage, setCurrentImage] = useState<number>(0);
 

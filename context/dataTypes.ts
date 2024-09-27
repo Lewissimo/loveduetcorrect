@@ -1,44 +1,53 @@
 export type intro = {
     logo: string;
     portrait: string;
-}
-
-export type eventsType = {
-    name:string;
-    date:string;
-    path:string;
-}
-
-export type offerType = {
+  };
+  
+  export type eventsType = {
+    id:string;
+    name: string;
+    date: string;
+    path: string;
+    place: string
+  };
+  
+  export type offerType = {
+    id:string;
     photoPath: string;
     pathPDF: string;
-}
-
-export type aboutType = {
-    name:string;
-    intro:string;
-    details:string;
-}
-
-export type artistsType = {
-    name:string;
-    role:string;
-    photo:string;
-    description:string;
-}
-
-export type galery = {
+  };
+  
+  export type aboutType = {
+    id:string;
     name: string;
-    path: string;
-}
-
-export type moviesType = {
-    path:string;
-}
-
-export type contactType = {
-    name:string;
-    phone:string;
-    mail:string;
-    fbPath:string;
-}
+    introText: string;
+    details: string[];
+  };
+  
+  export type artistsType = {
+    id:string;
+    name: string;
+    intro:string;
+    role: string;
+    photo: string;
+    description: string;
+  };
+  
+  export type galeryType = {
+    id:string;
+    name: string;
+    paths: string[];
+  };
+  
+  export type moviesType = {
+    paths: string[];
+  };
+  
+  export type contactType = {
+    id:string
+    name: string;
+    phone: string;
+    mail: string;
+    fbPath: string;
+    photo: string;
+  };

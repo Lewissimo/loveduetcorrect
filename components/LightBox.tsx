@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react'
 import ReactDOM from 'react-dom';
 
@@ -22,7 +23,7 @@ interface LightboxProps {
         zIndex: 1000,
         cursor: 'pointer'
       }} onClick={onClose}>
-        <img src={src} alt={alt} style={{ maxHeight: '90%', maxWidth: '90%' }} />
+        <Image width={200} height={200} src={src} alt={alt} style={{ maxHeight: '90%', maxWidth: '90%' }} />
       </div>,
       document.body
     )

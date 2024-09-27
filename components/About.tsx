@@ -2,7 +2,7 @@ import React, { ReactNode, useState } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
 import AboutDetails from './AboutDetails';
 import Link from 'next/link';
-import { aboutType } from '@/context/firebaseDataContext';
+import { aboutType } from '@/context/dataTypes';
 
 const About: React.FC<{ aboutData: aboutType[]; }> = ({aboutData}) => {
   const [details, setDetails] = useState<ReactNode | null>(null);

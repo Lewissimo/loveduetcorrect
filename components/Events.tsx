@@ -1,10 +1,9 @@
 import { Box, Grid, List, ListItemButton, ListItemText, Typography, Button } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { eventsType, offerType } from '@/context/firebaseDataContext';
+import { eventsType, offerType } from '@/context/dataTypes';
 
 
 const Events: React.FC<{ eventsData: eventsType[], offerData: offerType[] }> = ({ eventsData, offerData }) => {
-
 
   const handleDownloadOffer = () => {
     if (offerData.length > 0 && offerData[0].pathPDF) {
