@@ -30,7 +30,7 @@ const NavBar: React.FC = () => {
       <Link href="#about" passHref>
         <Button color="inherit">O nas</Button>
       </Link>
-      <Link href="#offer" passHref>
+      {/* <Link href="#offer" passHref>
         <Button color="inherit">Oferta</Button>
       </Link>
       <Link href="#artist" passHref>
@@ -38,7 +38,7 @@ const NavBar: React.FC = () => {
       </Link>
       <Link href="#gallery" passHref>
         <Button color="inherit">Galeria</Button>
-      </Link>
+      </Link> */}
       <Link href="#movies" passHref>
         <Button color="inherit">Filmy</Button>
       </Link>

@@ -201,9 +201,9 @@ const Home: React.FC<HomeProps> = ({
       <MainPage introData={introData} />
       <PhotoComponent introData={introData} />
       <About aboutData={aboutData} />
-      <Events eventsData={eventsData} offerData={offerData} />
-      <Musicians artistsData={artistsData} />
-      <Galery galeryData={galeryData} />
+      {/* <Events eventsData={eventsData} offerData={offerData} /> */}
+      {/* <Musicians artistsData={artistsData} /> */}
+      {/* <Galery galeryData={galeryData} /> */}
       <Movies moviesData={moviesData[0]} />
       <Contact contactData={contactData} />
     </Box>
