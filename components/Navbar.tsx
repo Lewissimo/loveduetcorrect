@@ -89,7 +89,7 @@ const NavBar: React.FC = () => {
               <ListItemText primary="O nas" />
             </ListItem>
           </Link>
-          <Link href="#offer" passHref>
+          {/* <Link href="#offer" passHref>
             <ListItem onClick={handleDrawerToggle}>
               <ListItemText primary="Oferta" />
             </ListItem>
@@ -103,7 +103,7 @@ const NavBar: React.FC = () => {
             <ListItem onClick={handleDrawerToggle}>
               <ListItemText primary="Galeria" />
             </ListItem>
-          </Link>
+          </Link> */}
           <Link href="#movies" passHref>
             <ListItem onClick={handleDrawerToggle}>
               <ListItemText primary="Filmy" />
