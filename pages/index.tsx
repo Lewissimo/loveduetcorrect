@@ -1,11 +1,8 @@
 import { GetStaticProps } from 'next';
 import MainPage from "@/components/Home";
 import About from "@/components/About";
-import Events from "@/components/Events";
-import Galery from "@/components/Galery";
 import Movies from "@/components/Movies";
 import Contact from "@/components/Contact";
-import Musicians from "@/components/Musicians";
 import PhotoComponent from "@/components/PhotoComponent";
 import { Box } from "@mui/material";
 import { db, storage } from '@/firebase/firebase';
@@ -187,11 +184,9 @@ const getImageURL = async (path: string): Promise<string> => {
 
 const Home: React.FC<HomeProps> = ({
   introData,
-  eventsData,
   offerData,
   aboutData,
-  artistsData,
-  galeryData,
+
   moviesData,
   contactData,
 }) => {
