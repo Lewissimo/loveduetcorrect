@@ -22,10 +22,12 @@ import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage
 import { collection, deleteDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { db, storage } from '@/firebase/firebase';
 import AddIcon from '@mui/icons-material/Add';
+
 const Contact: React.FC<{ contactData: contactType[] }> = ({ contactData }) => {
-  const [contacts, setContacts] = useState<contactType[]>(contactData);
+  const [contacts, setContacts] = useState<contactType[]>([]);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [newContact, setNewContact] = useState<contactType>({
+    order: 0,
     id: '',
     name: '',
     phone: '',
@@ -33,18 +35,21 @@ const Contact: React.FC<{ contactData: contactType[] }> = ({ contactData }) => {
     fbPath: '',
     photo: '',
   });
-  const [openDialog, setOpenDialog] = useState(false); 
-  const [openAddDialog, setOpenAddDialog] = useState(false); 
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [openAddDialog, setOpenAddDialog] = useState(false);
   const [newPhoto, setNewPhoto] = useState<File | null>(null);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    setContacts(contactData);
+    console.log(contactData[1].order);
+    setContacts(contactData.sort((a, b) => a.order - b.order));
   }, [contactData]);
 
   const handleEdit = (index: number) => {
     setEditIndex(index);
-    setNewContact(contacts[index]); 
-    setOpenDialog(true); 
+    setNewContact(contacts[index]);
+    setOpenDialog(true);
   };
 
   const handleSave = async () => {
@@ -67,9 +72,10 @@ const Contact: React.FC<{ contactData: contactType[] }> = ({ contactData }) => {
         mail: newContact.mail,
         fbPath: newContact.fbPath,
         photo: newContact.photo,
+        order: newContact.order,
       });
 
-      setOpenDialog(false); 
+      setOpenDialog(false);
       setNewPhoto(null);
     } catch (error) {
       console.error('Error updating contact:', error);
@@ -85,6 +91,7 @@ const Contact: React.FC<{ contactData: contactType[] }> = ({ contactData }) => {
         newContact.photo = photoUrl;
       }
 
+      const newOrder = contacts.length;
       const docRef = doc(collection(db, 'contactData'));
       await setDoc(docRef, {
         name: newContact.name,
@@ -92,13 +99,16 @@ const Contact: React.FC<{ contactData: contactType[] }> = ({ contactData }) => {
         mail: newContact.mail,
         fbPath: newContact.fbPath,
         photo: newContact.photo,
+        order: newOrder,
       });
 
-      newContact.id = docRef.id; 
-      setContacts([...contacts, newContact]);
+      newContact.id = docRef.id;
+      newContact.order = newOrder;
+      setContacts([...contacts, newContact].sort((a, b) => a.order - b.order));
 
       setOpenAddDialog(false);
       setNewContact({
+        order: 0,
         id: '',
         name: '',
         phone: '',
@@ -115,15 +125,63 @@ const Contact: React.FC<{ contactData: contactType[] }> = ({ contactData }) => {
   const handleRemove = async (index: number) => {
     try {
       const contactToRemove = contacts[index];
-      setContacts(contacts.filter((_, i) => i !== index));
-
+  
+      const updatedContacts = contacts.filter((_, i) => i !== index);
+      
+      const reorderedContacts = updatedContacts.map((contact, i) => ({
+        ...contact,
+        order: i,
+      }));
+  
+      setContacts(reorderedContacts);
+  
       const docRef = doc(db, 'contactData', contactToRemove.id);
       await deleteDoc(docRef);
-
+  
       const imageRef = ref(storage, contactToRemove.photo);
       await deleteObject(imageRef);
+  
+      for (const contact of reorderedContacts) {
+        const updateDocRef = doc(db, 'contactData', contact.id);
+        await updateDoc(updateDocRef, { order: contact.order });
+      }
+  
     } catch (error) {
       console.error('Error removing contact:', error);
+    }
+  };
+  
+
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index);
+  };
+
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
+
+  const handleDrop = async (index: number) => {
+    if (draggedIndex === null) return;
+
+    const reorderedContacts = [...contacts];
+    const [draggedItem] = reorderedContacts.splice(draggedIndex, 1);
+    reorderedContacts.splice(index, 0, draggedItem);
+
+    const updatedOrderContacts = reorderedContacts.map((contact, i) => ({
+      ...contact,
+      order: i,
+    }));
+
+    setContacts(updatedOrderContacts);
+    setDraggedIndex(null);
+
+    try {
+      for (const contact of updatedOrderContacts) {
+        const docRef = doc(db, 'contactData', contact.id);
+        await updateDoc(docRef, { order: contact.order });
+      }
+    } catch (error) {
+      console.error('Error updating contact order:', error);
     }
   };
 
@@ -141,13 +199,23 @@ const Contact: React.FC<{ contactData: contactType[] }> = ({ contactData }) => {
     >
       <Grid container spacing={4} maxWidth="lg">
         {contacts.map((element, index) => (
-          <Grid item xs={12} md={6} key={index}>
+          <Grid
+            item
+            xs={12}
+            md={6}
+            key={element.id}
+            draggable
+            onDragStart={() => handleDragStart(index)}
+            onDragOver={handleDragOver}
+            onDrop={() => handleDrop(index)}
+          >
             <Card
               sx={{
                 boxShadow: 3,
                 borderRadius: '15px',
                 padding: '20px',
                 backgroundColor: '#ffffff',
+                cursor: 'grab',
               }}
             >
               <CardContent>
@@ -209,23 +277,29 @@ const Contact: React.FC<{ contactData: contactType[] }> = ({ contactData }) => {
           </Grid>
         ))}
 
-      <Grid item xs={12} display="flex" justifyContent="center" marginTop="20px">
-        <Button variant="contained" startIcon={<AddCircleOutlineIcon />} onClick={() => {
-          setNewContact({
-            id: '',
-            name: '',
-            phone: '',
-            mail: '',
-            fbPath: '',
-            photo: '',
-          });
-          setOpenAddDialog(true); 
-        }}>
-          Dodaj Dane Kontaktowe
-        </Button>
-      </Grid>
+        <Grid item xs={12} display="flex" justifyContent="center" marginTop="20px">
+          <Button
+            variant="contained"
+            startIcon={<AddCircleOutlineIcon />}
+            onClick={() => {
+              setNewContact({
+                order: contacts.length,
+                id: '',
+                name: '',
+                phone: '',
+                mail: '',
+                fbPath: '',
+                photo: '',
+              });
+              setOpenAddDialog(true);
+            }}
+          >
+            Dodaj Dane Kontaktowe
+          </Button>
+        </Grid>
       </Grid>
 
+      {/* Edit Contact Dialog */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <Box padding={3} display="flex" flexDirection="column" alignItems="center">
           <IconButton onClick={() => setOpenDialog(false)} style={{ position: 'absolute', right: 8, top: 8 }}>
@@ -257,7 +331,7 @@ const Contact: React.FC<{ contactData: contactType[] }> = ({ contactData }) => {
             fullWidth
           />
           <TextField
-            label="Facebook"
+            label="Facebook Path"
             variant="outlined"
             value={newContact.fbPath}
             onChange={(e) => setNewContact({ ...newContact, fbPath: e.target.value })}
@@ -265,7 +339,7 @@ const Contact: React.FC<{ contactData: contactType[] }> = ({ contactData }) => {
             fullWidth
           />
           <Button variant="contained" component="label" startIcon={<AddIcon />}>
-            Zmień Zdjęciex
+            Zmień Zdjęcie
             <input
               type="file"
               hidden
@@ -282,6 +356,7 @@ const Contact: React.FC<{ contactData: contactType[] }> = ({ contactData }) => {
         </Box>
       </Dialog>
 
+      {/* Add Contact Dialog */}
       <Dialog open={openAddDialog} onClose={() => setOpenAddDialog(false)}>
         <Box padding={3} display="flex" flexDirection="column" alignItems="center">
           <IconButton onClick={() => setOpenAddDialog(false)} style={{ position: 'absolute', right: 8, top: 8 }}>
@@ -313,7 +388,7 @@ const Contact: React.FC<{ contactData: contactType[] }> = ({ contactData }) => {
             fullWidth
           />
           <TextField
-            label="Facebook"
+            label="Facebook Path"
             variant="outlined"
             value={newContact.fbPath}
             onChange={(e) => setNewContact({ ...newContact, fbPath: e.target.value })}
@@ -321,15 +396,15 @@ const Contact: React.FC<{ contactData: contactType[] }> = ({ contactData }) => {
             fullWidth
           />
           <Button variant="contained" component="label" startIcon={<AddIcon />}>
-            Dodaj zdjęcie
-            <input 
-              type="file" 
-              hidden 
+            Dodaj Zdjęcie
+            <input
+              type="file"
+              hidden
               onChange={(e) => {
                 if (e.target.files && e.target.files.length > 0) {
-                    setNewPhoto(e.target.files[0]);
+                  setNewPhoto(e.target.files[0]);
                 }
-              }} 
+              }}
             />
           </Button>
           <Button variant="contained" sx={{ marginTop: '20px' }} onClick={handleAddNewContact}>

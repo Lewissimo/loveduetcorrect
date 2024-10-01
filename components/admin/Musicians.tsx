@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// Musicians.tsx
+import React, { useState, useEffect } from 'react';
 import { Box, Stack, Container, Typography, Button, IconButton, Dialog, DialogContent, DialogActions, DialogTitle } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -10,82 +11,144 @@ import { artistsType } from '@/context/dataTypes';
 import EditArtistForm from './EditArtistForm';
 import { db, storage } from '@/firebase/firebase';
 import { doc, updateDoc, deleteDoc, getDocs, collection } from 'firebase/firestore';
-import { deleteObject, ref } from 'firebase/storage';
+import { deleteObject, getDownloadURL, ref } from 'firebase/storage';
 import CircularProgress from '@mui/material/CircularProgress';
 
 const Musicians: React.FC<{ artistsData: artistsType[] }> = ({ artistsData }) => {
   const [showMusicians, setShowMusicians] = useState(false);
   const [editArtist, setEditArtist] = useState<artistsType | null>(null);
-  const [currentArtists, setCurrentArtists] = useState(artistsData);
+  const [currentArtists, setCurrentArtists] = useState<artistsType[]>([]);
   const [confirmDelete, setConfirmDelete] = useState<artistsType | null>(null);
   const [isAddFormOpen, setIsAddFormOpen] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const toggleMusicians = () => {
-    setShowMusicians(prevShow => !prevShow);
+  const getImageURL = async (path: string): Promise<string> => {
+    try {
+      if (!path) return '';
+      const imageRef = ref(storage, path);
+      return await getDownloadURL(imageRef);
+    } catch (error) {
+      console.error(`Błąd pobierania obrazu dla ścieżki: ${path}`, error);
+      return '';
+    }
   };
+  
+  useEffect(() => {
+    setCurrentArtists(artistsData.sort((a, b) => a.order - b.order));
+  }, [artistsData]);
+
+  const toggleMusicians = () => setShowMusicians((prev) => !prev);
 
   const handleEdit = (artist: artistsType) => {
     setEditArtist(artist);
   };
+const handleCloseDialog = async () => {
+  setEditArtist(null);
+  setIsAddFormOpen(false);
 
-  const handleCloseDialog = async () => {
-    setEditArtist(null);
-    setIsAddFormOpen(false);
-
+  try {
     const snapshot = await getDocs(collection(db, 'artists'));
-    const updatedArtists = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as artistsType));
-    setCurrentArtists(updatedArtists);
-  };
+  
+    const updatedArtists = await Promise.all(
+      snapshot.docs.map(async (doc) => ({
+        id: doc.id,
+        name: doc.data().name || '',
+        intro: doc.data().intro || '',
+        role: doc.data().role || '',
+        photo: await getImageURL(doc.data().photo),
+        description: doc.data().description || '',
+        order: doc.data().order || 0,
+      })) 
+    );
+  
+    const sortedArtists = updatedArtists.sort((a, b) => a.order - b.order);
+    
+    console.log(sortedArtists);
+    setCurrentArtists(sortedArtists);
+  } catch (error) {
+    console.error('Error fetching updated artists:', error);
+  }
+  
+};
 
-  const handleDelete = async (artist: artistsType) => {
-    setIsLoading(true);
-    try {
-      if (artist.photo) {
-        const photoRef = ref(storage, artist.photo);
-        await deleteObject(photoRef);
-      }
 
-      await deleteDoc(doc(db, 'artists', artist.id));
-      setCurrentArtists(prevArtists => prevArtists.filter(a => a.id !== artist.id));
-      setConfirmDelete(null);
-    } catch (error) {
-      console.error('Error deleting artist:', error);
-    } finally {
-      setIsLoading(false);
+const handleDelete = async (artist: artistsType) => {
+  if (!artist.id) {
+    console.error('Error deleting artist: Artist ID is missing.');
+    return;
+  }
+
+  setIsLoading(true);
+  try {
+    if (artist.photo) {
+      const photoRef = ref(storage, artist.photo);
+      await deleteObject(photoRef);
     }
-  };
 
-  const handleReorder = async (index: number, direction: 'up' | 'down') => {
-    setIsLoading(true);
+    await deleteDoc(doc(db, 'artists', artist.id));
+
+    setCurrentArtists((prevArtists) => {
+      const updatedArtists = prevArtists.filter((a) => a.id !== artist.id);
+
+      const reorderedArtists = updatedArtists.map((a, index) => ({
+        ...a,
+        order: index,
+      }));
+
+      reorderedArtists.forEach(async (a) => {
+        const docRef = doc(db, 'artists', a.id);
+        await updateDoc(docRef, { order: a.order });
+      });
+
+      return reorderedArtists;
+    });
+
+    setConfirmDelete(null);
+  } catch (error) {
+    console.error('Error deleting artist:', error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+
+const handleReorder = async (index: number, direction: 'up' | 'down') => {
+  console.log(index);
+  setIsLoading(true);
+
+  try {
     const newArtists = [...currentArtists];
     const swapIndex = direction === 'up' ? index - 1 : index + 1;
 
     [newArtists[index], newArtists[swapIndex]] = [newArtists[swapIndex], newArtists[index]];
 
-    setCurrentArtists(newArtists);
+    const updatedOrderArtists = newArtists.map((artist, idx) => ({
+      ...artist,
+      order: idx,
+    }));
 
-    try {
-      const artistToSwap1 = newArtists[index];
-      const artistToSwap2 = newArtists[swapIndex];
+    setCurrentArtists(updatedOrderArtists);
 
-      const artistDocRef1 = doc(db, 'artists', artistToSwap1.id);
-      const artistDocRef2 = doc(db, 'artists', artistToSwap2.id);
+    console.log(updatedOrderArtists[index].id);
+    console.log(updatedOrderArtists[swapIndex].id);
 
-      const artistData1 = { ...artistToSwap1 };
-      const artistData2 = { ...artistToSwap2 };
+    if (updatedOrderArtists[index].id && updatedOrderArtists[swapIndex].id) {
+      const artistRef1 = doc(db, 'artists', updatedOrderArtists[index].id);
+      const artistRef2 = doc(db, 'artists', updatedOrderArtists[swapIndex].id);
 
-      await updateDoc(artistDocRef1, artistData2);
-      await updateDoc(artistDocRef2, artistData1);
+      console.log(artistRef1);
+      console.log(artistRef2);
 
-      console.log(`Swapped artist data between ${artistToSwap1.name} and ${artistToSwap2.name}`);
-    } catch (error) {
-      console.error('Error swapping artists:', error);
-    } finally {
-      setIsLoading(false);
+      await updateDoc(artistRef1, { order: updatedOrderArtists[index].order });
+      await updateDoc(artistRef2, { order: updatedOrderArtists[swapIndex].order });
     }
-  };
+  } catch (error) {
+    console.error('Błąd podczas zamiany artystów:', error);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
+  
   return (
     <Box id='artist' sx={{ height: '100vh', display: 'flex', alignItems: 'center', backgroundColor: '#f4f4f4', justifyContent: 'center' }}>
       {isLoading && (
@@ -158,7 +221,7 @@ const Musicians: React.FC<{ artistsData: artistsType[] }> = ({ artistsData }) =>
       {editArtist && (
         <Dialog open={true} onClose={handleCloseDialog} fullWidth>
           <DialogContent>
-            <EditArtistForm artist={editArtist} onClose={handleCloseDialog} />
+            <EditArtistForm artist={editArtist} onClose={handleCloseDialog} max={currentArtists[currentArtists.length - 1].order}/>
           </DialogContent>
         </Dialog>
       )}
@@ -172,14 +235,14 @@ const Musicians: React.FC<{ artistsData: artistsType[] }> = ({ artistsData }) =>
           </DialogActions>
         </Dialog>
       )}
+{isAddFormOpen && (
+  <Dialog open={true} onClose={handleCloseDialog}>
+    <DialogContent>
+      <EditArtistForm artist={null} onClose={handleCloseDialog} max={currentArtists.length > 0 ? currentArtists[currentArtists.length - 1].order + 1 : 0}/>
+    </DialogContent>
+  </Dialog>
+)}
 
-      {isAddFormOpen && (
-        <Dialog open={true} onClose={handleCloseDialog}>
-          <DialogContent>
-            <EditArtistForm artist={null} onClose={handleCloseDialog} />
-          </DialogContent>
-        </Dialog>
-      )}
     </Box>
   );
 };

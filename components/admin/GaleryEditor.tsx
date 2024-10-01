@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import Slider from 'react-slick';
 import Dialog from '@mui/material/Dialog';
 import IconButton from '@mui/material/IconButton';
@@ -17,8 +17,9 @@ import { Box, Typography } from '@mui/material';
 import { ref, uploadBytes, deleteObject, getDownloadURL } from "firebase/storage";
 import { doc, updateDoc } from "firebase/firestore";
 import { db, storage } from '@/firebase/firebase';
+import { galeryType } from '@/context/dataTypes';
 
-const GallerySlider = ({ data, backFunction, documentId, name }: { data: string[], backFunction: (element: null | number) => void, documentId: string, name: string }) => {
+const GallerySlider = ({ data, backFunction, documentId, name, setFun }: { data: string[], backFunction: (element: null | number) => void, documentId: string, name: string, setFun: Dispatch<SetStateAction<galeryType[]>>; }) => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [images, setImages] = useState<string[]>(data);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
@@ -32,52 +33,59 @@ const GallerySlider = ({ data, backFunction, documentId, name }: { data: string[
 
   const handleSaveChanges = async () => {
     try {
-      setIsLoading(true);
-      console.log("Rozpoczęcie procesu zapisywania...");
-      const removedImages = data.filter(img => !images.includes(img));
-      
-      for (const img of removedImages) {
-        try {
-          const imageRef = ref(storage, img);
-          await deleteObject(imageRef);
-          console.log(`Usunięto obraz ze storage: ${img}`);
-        } catch (error) {
-          console.error(`Nie udało się usunąć obrazu ${img} ze storage`, error);
+        setIsLoading(true);
+        console.log("Rozpoczęcie procesu zapisywania...");
+
+        const removedImages = data.filter(img => !images.includes(img));
+
+        for (const img of removedImages) {
+            try {
+                const imageRef = ref(storage, img);
+                await deleteObject(imageRef);
+                console.log(`Usunięto obraz ze storage: ${img}`);
+            } catch (error) {
+                console.error(`Nie udało się usunąć obrazu ${img} ze storage`, error);
+            }
         }
-      }
 
-      const uploadedUrls = [];
-      for (const file of updatedImages) {
-        console.log(`Przesyłanie pliku: ${file.name}`);
-        const fileRef = ref(storage, `gallery/${name}/${file.name}-${Date.now()}`);
-        
-        try {
-          await uploadBytes(fileRef, file);
-          const url = await getDownloadURL(fileRef);
-          console.log(`Plik przesłany pomyślnie: ${url}`);
-          uploadedUrls.push(url);
-        } catch (uploadError) {
-          console.error(`Błąd podczas przesyłania pliku ${file.name}:`, uploadError);
+        const uploadedUrls: string[] = [];
+
+        for (const file of updatedImages) {
+            console.log(`Przesyłanie pliku: ${file.name}`);
+            const fileRef = ref(storage, `gallery/${name}/${file.name}-${Date.now()}`);
+
+            try {
+                await uploadBytes(fileRef, file);
+                const url = await getDownloadURL(fileRef);
+                console.log(`Plik przesłany pomyślnie: ${url}`);
+                uploadedUrls.push(url);
+            } catch (uploadError) {
+                console.error(`Błąd podczas przesyłania pliku ${file.name}:`, uploadError);
+            }
         }
-      }
 
-      const docRef = doc(db, 'photoSections', documentId);
-      const updatedPaths = [...images.filter(img => !removedImages.includes(img) && !previewImages.includes(img)), ...uploadedUrls];
-      await updateDoc(docRef, { paths: updatedPaths });
-      
-      console.log("Firestore zaktualizowane pomyślnie z nowymi ścieżkami");
+const finalPaths = images
+  .map(img => (img.startsWith("blob:") ? uploadedUrls.shift() : img))
+  .filter((path): path is string => path !== undefined && path !== "");
 
-      setImages(updatedPaths);
-      setPreviewImages([]);
-      setUpdatedImages([]);
-      setEditMode(false);
-      console.log("Proces zapisu zakończony pomyślnie.");
+const docRef = doc(db, 'photoSections', documentId);
+await updateDoc(docRef, { paths: finalPaths });
+
+console.log("Firestore zaktualizowane pomyślnie z nowymi ścieżkami");
+setFun(prev => prev.map(item => item.id === documentId ? { ...item, paths: finalPaths } : item));
+
+        setImages(finalPaths);
+        setPreviewImages([]);
+        setUpdatedImages([]);
+        setEditMode(false);
+        console.log("Proces zapisu zakończony pomyślnie.");
     } catch (error) {
-      console.error('Błąd podczas zapisywania zmian:', error);
+        console.error('Błąd podczas zapisywania zmian:', error);
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
-  };
+};
+
 
   const onDragStart = (index: number) => {
     setDraggedIndex(index);
@@ -114,13 +122,14 @@ const GallerySlider = ({ data, backFunction, documentId, name }: { data: string[
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      const fileList = Array.from(event.target.files);
-      setUpdatedImages((prev) => [...prev, ...fileList]);
-      
-      const previewUrls = fileList.map(file => URL.createObjectURL(file));
-      setPreviewImages((prev) => [...prev, ...previewUrls]);
+        const fileList = Array.from(event.target.files);
+        setUpdatedImages((prev) => [...prev, ...fileList]);
+
+        const previewUrls = fileList.map(file => URL.createObjectURL(file));
+        setImages(prevImages => [...prevImages, ...previewUrls]);
     }
-  };
+};
+
 
   const NextArrow = ({ onClick }: { onClick?: () => void }) => (
     <IconButton

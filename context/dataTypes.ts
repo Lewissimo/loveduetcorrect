@@ -9,6 +9,7 @@ export type intro = {
     date: string;
     path: string;
     place: string
+    order: number;
   };
   
   export type offerType = {
@@ -29,6 +30,7 @@ export type intro = {
     name: string;
     intro:string;
     role: string;
+    order:number;
     photo: string;
     description: string;
   };
@@ -50,4 +52,5 @@ export type intro = {
     mail: string;
     fbPath: string;
     photo: string;
+    order:number;
   };

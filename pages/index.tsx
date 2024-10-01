@@ -9,6 +9,9 @@ import { db, storage } from '@/firebase/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { getDownloadURL, ref } from 'firebase/storage';
 import { aboutType, artistsType, contactType, eventsType, galeryType, intro, moviesType, offerType } from '@/context/dataTypes';
+import Events from '@/components/Events';
+import Musicians from '@/components/Musicians';
+import Galery from '@/components/Galery';
 
 type HomeProps = {
   introData: intro[];
@@ -48,7 +51,7 @@ export const getStaticProps: GetStaticProps = async () => {
         })
       );
 
-      const eventsSnapshot = await getDocs(collection(db, 'Events'));
+      const eventsSnapshot = await getDocs(collection(db, 'Events_m'));
       const eventsDocuments = eventsSnapshot.docs.map((doc) => {
         const data = doc.data();
         return {
@@ -186,7 +189,9 @@ const Home: React.FC<HomeProps> = ({
   introData,
   offerData,
   aboutData,
-
+  eventsData,
+  artistsData,
+  galeryData,
   moviesData,
   contactData,
 }) => {
@@ -196,9 +201,9 @@ const Home: React.FC<HomeProps> = ({
       <MainPage introData={introData} />
       <PhotoComponent introData={introData} />
       <About aboutData={aboutData} />
-      {/* <Events eventsData={eventsData} offerData={offerData} /> */}
-      {/* <Musicians artistsData={artistsData} /> */}
-      {/* <Galery galeryData={galeryData} /> */}
+      <Events eventsData={eventsData} offerData={offerData} />
+      <Musicians artistsData={artistsData} />
+      <Galery galeryData={galeryData} />
       <Movies moviesData={moviesData[0]} />
       <Contact contactData={contactData} />
     </Box>

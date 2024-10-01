@@ -1,3 +1,4 @@
+// EditArtistForm.tsx
 import React, { useState } from 'react';
 import { Box, Button, TextField, Stepper, Step, StepLabel } from '@mui/material';
 import { artistsType } from '@/context/dataTypes';
@@ -9,9 +10,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 interface EditArtistFormProps {
   artist: artistsType | null;
   onClose: () => void;
+  max:number;
 }
 
-const EditArtistForm: React.FC<EditArtistFormProps> = ({ artist, onClose }) => {
+const EditArtistForm: React.FC<EditArtistFormProps> = ({ artist, onClose, max }) => {
   const [formData, setFormData] = useState<artistsType>({
     id: artist?.id || '',
     name: artist?.name || '',
@@ -19,6 +21,7 @@ const EditArtistForm: React.FC<EditArtistFormProps> = ({ artist, onClose }) => {
     role: artist?.role || '',
     photo: artist?.photo || '',
     description: artist?.description || '',
+    order: artist?.order || 0,
   });
 
   const [step, setStep] = useState(0);
@@ -58,6 +61,8 @@ const EditArtistForm: React.FC<EditArtistFormProps> = ({ artist, onClose }) => {
         await updateDoc(artistRef, formData);
       } else {
         const artistsCollection = collection(db, 'artists');
+        console.log(max);
+        formData.order = max;
         await addDoc(artistsCollection, formData);
       }
 

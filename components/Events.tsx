@@ -1,10 +1,14 @@
 import { Box, Grid, List, ListItemButton, ListItemText, Typography, Button } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { eventsType, offerType } from '@/context/dataTypes';
+import { useEffect, useState } from 'react';
 
 
 const Events: React.FC<{ eventsData: eventsType[], offerData: offerType[] }> = ({ eventsData, offerData }) => {
-
+  const [events, setEvents] = useState<eventsType[]>([]);
+  useEffect(()=>{
+    setEvents(eventsData.sort((a, b) => a.order - b.order));
+  }, [eventsData])
   const handleDownloadOffer = () => {
     if (offerData.length > 0 && offerData[0].pathPDF) {
       const link = document.createElement('a');
@@ -19,14 +23,14 @@ const Events: React.FC<{ eventsData: eventsType[], offerData: offerType[] }> = (
   return (
     <Box id='offer'>
       <Grid minHeight={'100vh'} container sx={{ animation: '1s showAnim forwards', my: '50px' }}>
-        {eventsData.length > 0 && (
-          <Grid xs={12} lg={6} item display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
+        {events.length > 0 && (
+          <Grid xs={12} lg={6} item display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'} >
             <Box sx={{ bgcolor: 'rgba(23, 19, 20, .7)', margin: '8px', borderRadius: '25px', padding: '20px' }}>
               <Typography variant="h4" gutterBottom color='white'>
                 Zobacz najbliższe wydarzenia:
               </Typography>
-              <List>
-                {eventsData.map((item, index) => (
+              <List sx={{maxHeight: '70vh', overflow: 'auto'}}>
+                {events.map((item, index) => (
                   <ListItemButton
                     key={index}
                     href={item.path}

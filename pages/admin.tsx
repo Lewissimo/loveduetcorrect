@@ -51,11 +51,12 @@ export const getStaticProps: GetStaticProps = async () => {
         })
       );
 
-      const eventsSnapshot = await getDocs(collection(db, 'Events'));
+      const eventsSnapshot = await getDocs(collection(db, 'Events_m'));
       const eventsDocuments = eventsSnapshot.docs.map((doc) => {
         const data = doc.data();
         return {
           id: doc.id,
+          order: data.order || '',
           name: data.name || '',
           date: data.date || '',
           path: data.path || '',
@@ -96,7 +97,8 @@ export const getStaticProps: GetStaticProps = async () => {
             intro: data.intro || '',
             role: data.role || '',
             photo: await getImageURL(data.photo),
-            description: data.description || ''
+            description: data.description || '',
+            order: data.order || ''
           };
         })
       );
@@ -136,7 +138,8 @@ export const getStaticProps: GetStaticProps = async () => {
             phone: data.phone || '',
             mail: data.mail || '',
             fbPath: data.fbPath || '',
-            photo: await getImageURL(data.photo)
+            photo: await getImageURL(data.photo),
+            order: data.order || ''
           };
         })
       );

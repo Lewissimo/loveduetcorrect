@@ -1,10 +1,14 @@
 import { Box, Stack, Container, Typography, Button } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PersonCard from './PersonalCard';
 import { artistsType } from '@/context/dataTypes';
 
 const Musicians: React.FC<{ artistsData: artistsType[] }> = ({ artistsData }) => {
   const [showMusicians, setShowMusicians] = useState(false);
+  const [currentArtists, setCurrentArtists] = useState<artistsType[]>([]);
+  useEffect(() => {
+    setCurrentArtists(artistsData.sort((a, b) => a.order - b.order));
+  }, [artistsData]);
 
   const toggleMusicians = () => {
     setShowMusicians(prevShow => !prevShow);
@@ -56,7 +60,7 @@ const Musicians: React.FC<{ artistsData: artistsType[] }> = ({ artistsData }) =>
 
           {showMusicians && (
             <Stack spacing={4}>
-              {artistsData.map((element, index) => (
+              {currentArtists.map((element, index) => (
                 <Box
                   key={index}
                   display="flex"

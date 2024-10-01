@@ -13,16 +13,16 @@ import {
   DialogActions,
   TextField,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { doc, updateDoc, deleteDoc, addDoc, collection, getDocs } from 'firebase/firestore';
+import { doc, updateDoc, deleteDoc, addDoc, collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { db, storage } from '@/firebase/firebase';
 import { eventsType, offerType } from '@/context/dataTypes';
 
 const Events: React.FC<{ eventsData: eventsType[]; offerData: offerType[] }> = ({ eventsData, offerData }) => {
-  const [events, setEvents] = useState(eventsData);
+  const [events, setEvents] = useState<eventsType[]>([]);
   const [offer, setOffer] = useState(offerData[0] || { pathPDF: '', photoPath: '' });
   const [openDialog, setOpenDialog] = useState(false);
   const [openOfferDialog, setOpenOfferDialog] = useState(false);
@@ -32,8 +32,11 @@ const Events: React.FC<{ eventsData: eventsType[]; offerData: offerType[] }> = (
   const [newOfferImage, setNewOfferImage] = useState<File | null>(null);
   const [newOfferPDF, setNewOfferPDF] = useState<File | null>(null);
 
+  useEffect(()=>{
+    setEvents(eventsData.sort((a, b) => a.order - b.order));
+  }, [eventsData])
   const handleEdit = (event: eventsType | null = null) => {
-    setCurrentEvent(event || { id: '', name: '', date: '', place: '', path: '' });
+    setCurrentEvent(event || { id: '', name: '', date: '', place: '', path: '', order: events.length });
     setIsEditing(!!event);
     setOpenDialog(true);
   };
@@ -51,19 +54,22 @@ const Events: React.FC<{ eventsData: eventsType[]; offerData: offerType[] }> = (
     try {
       if (currentEvent) {
         if (isEditing) {
-          const eventRef = doc(db, 'Events', currentEvent.id);
+          const eventRef = doc(db, 'Events_m', currentEvent.id);
           await updateDoc(eventRef, {
             name: currentEvent.name,
             date: currentEvent.date,
             place: currentEvent.place,
             path: currentEvent.path,
+            order: currentEvent.order,
           });
         } else {
-          await addDoc(collection(db, 'Events'), {
+          const newOrder = events.length;
+          await addDoc(collection(db, 'Events_m'), {
             name: currentEvent.name,
             date: currentEvent.date,
             place: currentEvent.place,
             path: currentEvent.path,
+            order: newOrder,
           });
         }
         await refreshEvents();
@@ -77,7 +83,7 @@ const Events: React.FC<{ eventsData: eventsType[]; offerData: offerType[] }> = (
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this event?')) {
       try {
-        await deleteDoc(doc(db, 'Events', id));
+        await deleteDoc(doc(db, 'Events_m', id));
         await refreshEvents();
       } catch (error) {
         console.error('Error deleting event: ', error);
@@ -111,15 +117,11 @@ const Events: React.FC<{ eventsData: eventsType[]; offerData: offerType[] }> = (
 
   const updateAllEvents = async () => {
     try {
-      for (const event of events) {
-        await deleteDoc(doc(db, 'Events', event.id));
-      }
-      for (const event of events) {
-        await addDoc(collection(db, 'Events'), {
-          name: event.name,
-          date: event.date,
-          place: event.place,
-          path: event.path,
+      for (let index = 0; index < events.length; index++) {
+        const event = events[index];
+        const eventRef = doc(db, 'Events_m', event.id);
+        await updateDoc(eventRef, {
+          order: index,
         });
       }
       await refreshEvents();
@@ -130,7 +132,8 @@ const Events: React.FC<{ eventsData: eventsType[]; offerData: offerType[] }> = (
 
   const refreshEvents = async () => {
     try {
-      const eventsSnapshot = await getDocs(collection(db, 'Events'));
+      const eventsQuery = query(collection(db, 'Events_m'), orderBy('order'));
+      const eventsSnapshot = await getDocs(eventsQuery);
       const updatedEvents = eventsSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })) as eventsType[];
       setEvents(updatedEvents);
     } catch (error) {
@@ -196,7 +199,6 @@ const Events: React.FC<{ eventsData: eventsType[]; offerData: offerType[] }> = (
     }
   };
 
-
   const handleDownloadOffer = () => {
     if (offer.pathPDF) {
       const link = document.createElement('a');
@@ -211,7 +213,7 @@ const Events: React.FC<{ eventsData: eventsType[]; offerData: offerType[] }> = (
   return (
     <Box id="offer">
       <Grid container sx={{ my: '50px' }}>
-        <Grid xs={12} lg={6} item display="flex" flexDirection="column" alignItems="center">
+        <Grid item xs={12} lg={6} display="flex" flexDirection="column" alignItems="center">
           <Box sx={{ bgcolor: 'rgba(23, 19, 20, .7)', margin: '8px', borderRadius: '25px', padding: '20px' }}>
             <Typography variant="h4" gutterBottom color="white">
               Zobacz najbliższe wydarzenia:
@@ -220,7 +222,7 @@ const Events: React.FC<{ eventsData: eventsType[]; offerData: offerType[] }> = (
               {events.map((item, index) => (
                 <ListItemButton
                   key={index}
-                  sx={{ cursor: 'grab',color: 'white', '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } }}
+                  sx={{ cursor: 'grab', color: 'white', '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } }}
                   draggable
                   onDragStart={() => handleDragStart(index)}
                   onDragEnter={() => handleDragEnter(index)}
@@ -251,7 +253,7 @@ const Events: React.FC<{ eventsData: eventsType[]; offerData: offerType[] }> = (
         </Grid>
 
         {offer && (
-          <Grid xs={12} lg={6} item sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Grid item xs={12} lg={6} display="flex" alignItems="center" justifyContent="center">
             <Box sx={{ textAlign: 'center', margin: '8px', borderRadius: '5px', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
               <Typography variant="h4" gutterBottom color="white">
                 Zobacz ofertę
