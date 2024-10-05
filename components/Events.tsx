@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 const Events: React.FC<{ eventsData: eventsType[], offerData: offerType[] }> = ({ eventsData, offerData }) => {
   const [events, setEvents] = useState<eventsType[]>([]);
   useEffect(()=>{
+    console.log(eventsData.sort((a, b) => a.order - b.order));
     setEvents(eventsData.sort((a, b) => a.order - b.order));
   }, [eventsData])
   const handleDownloadOffer = () => {
