@@ -16,7 +16,7 @@ const Galery:React.FC<{ galeryData: galeryType[] }> = ({galeryData}) => {
             {galeryData.map((element, index) => (
           <Grid item xs={12} key={index} sm={6} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Button 
-            href='#gallery'
+              href='#gallery'
               variant="outlined" 
               color="primary" 
               onClick={() => setType(index)}

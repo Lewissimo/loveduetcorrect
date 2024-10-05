@@ -83,8 +83,8 @@ const GallerySlider = ({data, backFunction}: {data: string[], backFunction:(elem
 
       <Slider {...settings}>
         {data.map((img, index) => (
-          <Box height={'700px'} padding={'30px'} display={'flex !important'} justifyContent={'center'} alignItems={'center'} key={index} onClick={() => handleImageClick(index)}>
-            <Image src={img} alt={`Slide ${index}`} width={300} height={200} layout='responsive' />
+          <Box height={'100vh'} padding={'30px'} overflow={'visible'}  key={index} onClick={() => handleImageClick(index)} display={'flex !important'} justifyContent={'center'} alignItems={'center'}>
+            <Image src={img} alt={`Slide ${index}`} width={100} height={200} layout='responsive' style={{maxWidth: '500px'}} />
           </Box>
         ))}
       </Slider>
