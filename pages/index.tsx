@@ -59,7 +59,8 @@ export const getStaticProps: GetStaticProps = async () => {
           name: data.name || '',
           date: data.date || '',
           path: data.path || '',
-          place: data.place || ''
+          place: data.place || '',
+          order: data.order || ''
         };
       });
 
@@ -97,7 +98,8 @@ export const getStaticProps: GetStaticProps = async () => {
             name: data.name || '',
             role: data.role || '',
             photo: await getImageURL(data.photo),
-            description: data.description || ''
+            description: data.description || '',
+            order: data.order || ''
           };
         })
       );
@@ -137,7 +139,8 @@ export const getStaticProps: GetStaticProps = async () => {
             phone: data.phone || '',
             mail: data.mail || '',
             fbPath: data.fbPath || '',
-            photo: await getImageURL(data.photo)
+            photo: await getImageURL(data.photo),
+            order: data.order || ''
           };
         })
       );

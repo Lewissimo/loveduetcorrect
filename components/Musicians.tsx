@@ -38,10 +38,14 @@ const Musicians: React.FC<{ artistsData: artistsType[] }> = ({ artistsData }) =>
             gutterBottom
             sx={{
               marginBottom: '2rem',
-              fontStyle: 'oblique'
+              fontStyle: 'oblique',
+              fontSize: {
+                xs: '1.5em',
+                lg: '3em'
+              }
             }}
           >
-            Poznaj naszych muzyków
+            Poznaj naszych artystów i muzyków
           </Typography>
 
           <Box display="flex" justifyContent="center" mb={4}>
