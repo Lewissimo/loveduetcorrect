@@ -197,9 +197,9 @@ setFun(prev => prev.map(item => item.id === documentId ? { ...item, paths: final
       </Box>
       <Slider {...settings}>
         {images.map((img, index) => (
-          <Box key={index} height={'700px'} padding={'30px'} display="flex" justifyContent="center" alignItems="center">
-            <Image src={img} alt={`Slide ${index}`} width={300} height={200} layout='responsive' />
-          </Box>
+          <Box height={'100vh'} padding={'30px'} overflow={'visible'}  key={index} display={'flex !important'} justifyContent={'center'} alignItems={'center'}>
+          <Image src={img} alt={`Slide ${index}`} width={100} height={200} layout='responsive' style={{maxWidth: '500px'}} />
+        </Box>
         ))}
       </Slider>
       <Dialog open={editMode} onClose={() => setEditMode(false)} maxWidth="lg" fullWidth>
