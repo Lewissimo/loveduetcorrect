@@ -1,4 +1,5 @@
 import { GetStaticProps } from 'next';
+import Head from 'next/head';
 import MainPage from "@/components/Home";
 import About from "@/components/About";
 import Movies from "@/components/Movies";
@@ -35,7 +36,6 @@ const getPDFURL = async (path: string): Promise<string> => {
     return '';
   }
 };
-
 
 export const getStaticProps: GetStaticProps = async () => {
   const fetchDataFromFirebase = async () => {
@@ -92,7 +92,6 @@ export const getStaticProps: GetStaticProps = async () => {
         artistsSnapshot.docs.map(async (doc) => {
           const data = doc.data();
           return {
-            
             intro: data.intro || '',
             id: doc.id,
             name: data.name || '',
@@ -201,6 +200,39 @@ const Home: React.FC<HomeProps> = ({
   console.log(offerData);
   return (
     <Box sx={{ bgcolor: 'black' }}>
+<Head>
+        <title>Love Duet - Dorota Ritz i Paweł Wisnar | Warszawski Duet Operetkowy</title>
+        <link rel="icon" href="/icon2.jpg" type="image/png" sizes="32x32" />
+
+        <meta
+          name="description"
+          content="Love Duet to warszawski duet śpiewaków operetkowych - Dorota Ritz (sopran) i Paweł Wisnar (tenor). Od 2010 roku występują na polskich i zagranicznych estradach, tworząc autorskie programy operetkowo-musicalowe."
+        />
+        <meta
+          name="keywords"
+          content="Love Duet, Dorota Ritz, Paweł Wisnar, operetka, duet operetkowy, warszawski duet, śpiewacy operowi, programy operetkowe, muzyka, kultura, spektakle muzyczne, show operetkowe, Bel Canto"
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+=        <meta property="og:title" content="Love Duet - Dorota Ritz i Paweł Wisnar | Warszawski Duet Operetkowy" />
+        <meta
+          property="og:description"
+          content="Love Duet to warszawski duet śpiewaków operetkowych - Dorota Ritz (sopran) i Paweł Wisnar (tenor). Od 2010 roku występują na polskich i zagranicznych estradach, tworząc autorskie programy operetkowo-musicalowe."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.loveduet.pl" />
+        <meta property="og:image" content="URL_do_obrazka" />
+
+=        <meta name="twitter:title" content="Love Duet - Dorota Ritz i Paweł Wisnar | Warszawski Duet Operetkowy" />
+        <meta
+          name="twitter:description"
+          content="Love Duet to warszawski duet śpiewaków operetkowych - Dorota Ritz (sopran) i Paweł Wisnar (tenor). Od 2010 roku występują na polskich i zagranicznych estradach, tworząc autorskie programy operetkowo-musicalowe."
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="URL_do_obrazka" />
+
+=        <link rel="canonical" href="https://www.loveduet.pl" />
+      </Head>
       <MainPage introData={introData} />
       <PhotoComponent introData={introData} />
       <About aboutData={aboutData} />

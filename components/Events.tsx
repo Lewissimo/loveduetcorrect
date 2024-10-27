@@ -3,18 +3,20 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { eventsType, offerType } from '@/context/dataTypes';
 import { useEffect, useState } from 'react';
 
-
 const Events: React.FC<{ eventsData: eventsType[], offerData: offerType[] }> = ({ eventsData, offerData }) => {
   const [events, setEvents] = useState<eventsType[]>([]);
-  useEffect(()=>{
-    console.log(eventsData.sort((a, b) => a.order - b.order));
-    setEvents(eventsData.sort((a, b) => a.order - b.order));
-  }, [eventsData])
+
+  useEffect(() => {
+    // Sortujemy wydarzenia bez mutowania oryginalnej tablicy
+    const sortedEvents = [...eventsData].sort((a, b) => a.order - b.order);
+    setEvents(sortedEvents);
+  }, [eventsData]);
+
   const handleDownloadOffer = () => {
     if (offerData.length > 0 && offerData[0].pathPDF) {
       const link = document.createElement('a');
-      link.href = `${offerData[0].pathPDF}`;
-      link.download = `${offerData[0].pathPDF}`;
+      link.href = offerData[0].pathPDF;
+      link.setAttribute('download', 'Oferta_Love_Duet.pdf');
       link.click();
     } else {
       console.warn('Path to PDF is missing.');
@@ -22,19 +24,46 @@ const Events: React.FC<{ eventsData: eventsType[], offerData: offerType[] }> = (
   };
 
   return (
-    <Box id='offer'>
-      <Grid minHeight={'100vh'} container sx={{ animation: '1s showAnim forwards', my: '50px' }}>
+    <Box id="offer" component="section">
+      <Grid
+        container
+        minHeight="100vh"
+        sx={{ animation: '1s showAnim forwards', my: '50px' }}
+      >
         {events.length > 0 && (
-          <Grid xs={12} lg={6} item display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'} >
-            <Box sx={{ bgcolor: 'rgba(23, 19, 20, .7)', margin: '8px', borderRadius: '25px', padding: '20px' }}>
-              <Typography variant="h4" gutterBottom color='white'>
+          <Grid
+            item
+            xs={12}
+            lg={6}
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Box
+              sx={{
+                bgcolor: 'rgba(23, 19, 20, .7)',
+                margin: '8px',
+                borderRadius: '25px',
+                padding: '20px',
+              }}
+            >
+              <Typography
+                variant="h4"
+                component="h2"
+                gutterBottom
+                color="white"
+              >
                 Zobacz najbliższe wydarzenia:
               </Typography>
-              <List sx={{maxHeight: '70vh', overflow: 'auto'}}>
+              <List sx={{ maxHeight: '70vh', overflow: 'auto' }}>
                 {events.map((item, index) => (
                   <ListItemButton
                     key={index}
+                    component="a"
                     href={item.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     sx={{
                       '&:hover': {
                         backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -68,9 +97,34 @@ const Events: React.FC<{ eventsData: eventsType[], offerData: offerType[] }> = (
         )}
 
         {offerData.length > 0 && (
-          <Grid xs={12} lg={6} item sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Box sx={{ textAlign: 'center', margin: '8px', borderRadius: '5px', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-              <Typography variant="h4" gutterBottom color='white'>
+          <Grid
+            item
+            xs={12}
+            lg={6}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Box
+              sx={{
+                textAlign: 'center',
+                margin: '8px',
+                borderRadius: '5px',
+                padding: '20px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+              }}
+            >
+              <Typography
+                variant="h4"
+                component="h2"
+                gutterBottom
+                color="white"
+              >
                 Zobacz ofertę
               </Typography>
 
@@ -83,7 +137,7 @@ const Events: React.FC<{ eventsData: eventsType[], offerData: offerType[] }> = (
                   borderRadius: '25px',
                   boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
                 }}
-                alt="Oferta"
+                alt="Oferta Love Duet"
                 src={offerData[0].photoPath || '/default-image.jpg'}
               />
 
@@ -101,5 +155,6 @@ const Events: React.FC<{ eventsData: eventsType[], offerData: offerType[] }> = (
       </Grid>
     </Box>
   );
-}
+};
+
 export default Events;

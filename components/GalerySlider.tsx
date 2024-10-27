@@ -10,10 +10,15 @@ import 'slick-carousel/slick/slick-theme.css';
 import Image from 'next/image';
 import { Box } from '@mui/material';
 
+interface GallerySliderProps {
+  data: string[];
+  backFunction: (element: null | number) => void;
+}
 
-
-const GallerySlider = ({data, backFunction}: {data: string[], backFunction:(element: null | number) => void}) => {
-
+const GallerySlider: React.FC<GallerySliderProps> = ({
+  data,
+  backFunction,
+}) => {
   const [open, setOpen] = useState<boolean>(false);
   const [currentImage, setCurrentImage] = useState<number>(0);
 
@@ -25,9 +30,17 @@ const GallerySlider = ({data, backFunction}: {data: string[], backFunction:(elem
     return (
       <IconButton
         onClick={onClick}
-        style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', zIndex: 1, color: 'black' }}
+        style={{
+          position: 'absolute',
+          right: 0,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          zIndex: 1,
+          color: 'black',
+        }}
+        aria-label="Następny slajd"
       >
-        <ArrowForwardIosIcon sx={{color:'white'}}/>
+        <ArrowForwardIosIcon sx={{ color: 'white' }} />
       </IconButton>
     );
   };
@@ -36,9 +49,17 @@ const GallerySlider = ({data, backFunction}: {data: string[], backFunction:(elem
     return (
       <IconButton
         onClick={onClick}
-        style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', zIndex: 1, color: 'white' }}
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          zIndex: 1,
+          color: 'white',
+        }}
+        aria-label="Poprzedni slajd"
       >
-        <ArrowBackIosNewIcon sx={{color:'white'}}/>
+        <ArrowBackIosNewIcon sx={{ color: 'white' }} />
       </IconButton>
     );
   };
@@ -64,7 +85,8 @@ const GallerySlider = ({data, backFunction}: {data: string[], backFunction:(elem
   };
 
   const handleNext = () => setCurrentImage((currentImage + 1) % data.length);
-  const handlePrev = () => setCurrentImage((currentImage + data.length - 1) % data.length);
+  const handlePrev = () =>
+    setCurrentImage((currentImage + data.length - 1) % data.length);
   const handleClose = () => setOpen(false);
   const handleImageClick = (index: number) => {
     setCurrentImage(index);
@@ -72,35 +94,105 @@ const GallerySlider = ({data, backFunction}: {data: string[], backFunction:(elem
   };
 
   return (
-    <Box>
+    <Box component="section">
       <IconButton
-
-        onClick={() => backFunction(null)} 
-        style={{ position: 'absolute', left: 16, top: 16, zIndex: 10, color: 'white' }}
+        onClick={() => backFunction(null)}
+        href='#gallery'
+        style={{
+          position: 'absolute',
+          left: 16,
+          top: 16,
+          zIndex: 10,
+          color: 'white',
+        }}
+        aria-label="Powrót do galerii"
       >
         <ArrowBackIosNewIcon sx={{ color: 'white' }} />
       </IconButton>
 
       <Slider {...settings}>
         {data.map((img, index) => (
-          <Box height={'100vh'} padding={'30px'} overflow={'visible'}  key={index} onClick={() => handleImageClick(index)} display={'flex !important'} justifyContent={'center'} alignItems={'center'}>
-            <Image src={img} alt={`Slide ${index}`} width={100} height={200} layout='responsive' style={{maxWidth: '500px'}} />
+          <Box
+            height="100vh"
+            padding="30px"
+            overflow="visible"
+            key={index}
+            onClick={() => handleImageClick(index)}
+            display="flex !important"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Image
+              src={img}
+              alt={`Slide ${index}`}
+              width={100}
+              height={200}
+              layout="responsive"
+              style={{ maxWidth: '500px' }}
+            />
           </Box>
         ))}
       </Slider>
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-        <IconButton onClick={handleClose} style={{ position: 'absolute', right: 8, top: 8, color: 'white' }}>
+        <IconButton
+          onClick={handleClose}
+          style={{ position: 'absolute', right: 8, top: 8, color: 'white' }}
+          aria-label="Zamknij podgląd"
+        >
           <CloseIcon />
         </IconButton>
-        <IconButton onClick={handlePrev} style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'white' }}>
+        <IconButton
+          onClick={handlePrev}
+          style={{
+            position: 'absolute',
+            left: 16,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            color: 'white',
+          }}
+          aria-label="Poprzednie zdjęcie"
+        >
           <ArrowBackIosNewIcon />
         </IconButton>
-        <IconButton onClick={handleNext} style={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)', color: 'white' }}>
+        <IconButton
+          onClick={handleNext}
+          style={{
+            position: 'absolute',
+            right: 16,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            color: 'white',
+          }}
+          aria-label="Następne zdjęcie"
+        >
           <ArrowForwardIosIcon />
         </IconButton>
-        <div style={{ width: '100%', height: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-            <Image src={data[currentImage]} alt={`Gallery image ${currentImage}`} layout='fill' objectFit='contain' />
+        <div
+          style={{
+            width: '100%',
+            height: '80vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative',
+          }}
+        >
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'relative',
+            }}
+          >
+            <Image
+              src={data[currentImage]}
+              alt={`Gallery image ${currentImage}`}
+              layout="fill"
+              objectFit="contain"
+            />
           </div>
         </div>
       </Dialog>

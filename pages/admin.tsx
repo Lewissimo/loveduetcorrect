@@ -13,6 +13,7 @@ import Galery from '@/components/admin/Galery';
 import Movies from '@/components/admin/Movies';
 import Contact from '@/components/admin/Contact';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import Head from 'next/head';
 
 type HomeProps = {
   introData: intro[];
@@ -201,7 +202,9 @@ const Home: React.FC<HomeProps> = ({
   console.log(offerData);
   return (
     <ProtectedRoute>
-
+      <Head>
+        <meta name="robots" content="noindex, nofollow" />
+      </Head>
     <Box sx={{ bgcolor: 'black' }}>
       <MainPage introData={introData} />
       <PhotoComponent introData={introData} />

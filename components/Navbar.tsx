@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Box,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
+import {
+  Menu as MenuIcon,
+  Facebook as FacebookIcon,
+  YouTube as YouTubeIcon,
+} from '@mui/icons-material';
 import Link from 'next/link';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import YouTubeIcon from '@mui/icons-material/YouTube';
 
 const NavBar: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -22,43 +29,100 @@ const NavBar: React.FC = () => {
     setDrawerOpen(!drawerOpen);
   };
 
+  const menuLinks = [
+    { href: '#home', label: 'Strona Główna' },
+    { href: '#about', label: 'O nas' },
+    { href: '#offer', label: 'Oferta' },
+    { href: '#artist', label: 'Artyści' },
+    { href: '#gallery', label: 'Galeria' },
+    { href: '#movies', label: 'Filmy' },
+    { href: '#contact', label: 'Kontakt' },
+    {
+      href: 'https://www.bilety24.pl/szukaj?search=Zagadka+tenora&submit=',
+      label: 'Bilety',
+      external: true,
+    },
+  ];
+
+  const socialLinks = [
+    {
+      href: 'https://www.facebook.com/profile.php?id=61557994065108',
+      icon: <FacebookIcon />,
+      label: 'Facebook',
+    },
+    {
+      href: 'https://www.youtube.com/@pawelwytrazek2005/videos',
+      icon: <YouTubeIcon />,
+      label: 'YouTube',
+    },
+  ];
+
   const menuItems = (
     <Box sx={{ color: 'white', display: 'flex', alignItems: 'center' }}>
-      <Link href="#home" passHref>
-        <Button color="inherit">Home</Button>
-      </Link>
-      <Link href="#about" passHref>
-        <Button color="inherit">O nas</Button>
-      </Link>
-      <Link href="#offer" passHref>
-        <Button color="inherit">Oferta</Button>
-      </Link>
-      <Link href="#artist" passHref>
-        <Button color="inherit">Artyści</Button>
-      </Link>
-      <Link href="#gallery" passHref>
-        <Button color="inherit">Galeria</Button>
-      </Link>
-      <Link href="#movies" passHref>
-        <Button color="inherit">Filmy</Button>
-      </Link>
-      <Link href="#contact" passHref>
-        <Button color="inherit">Kontakt</Button>
-      </Link>
-      <Link href="https://www.bilety24.pl/szukaj?search=Zagadka+tenora&submit=" passHref>
-        <Button color="inherit">Bilety</Button>
-      </Link>
-      <IconButton color="inherit" component={Link} href="https://www.facebook.com/profile.php?id=61557994065108">
-        <FacebookIcon sx={{ color: 'white' }} />
-      </IconButton>
-      <IconButton color="inherit" component={Link} href="https://www.youtube.com/@pawelwytrazek2005/videos">
-        <YouTubeIcon sx={{ color: 'white' }} />
-      </IconButton>
+      {menuLinks.map((link) => (
+        <Button
+          key={link.label}
+          component={Link}
+          href={link.href}
+          color="inherit"
+          target={link.external ? '_blank' : undefined}
+          rel={link.external ? 'noopener noreferrer' : undefined}
+          sx={{ textTransform: 'none' }}
+        >
+          {link.label}
+        </Button>
+      ))}
+      {socialLinks.map((link) => (
+        <IconButton
+          key={link.label}
+          color="inherit"
+          component="a"
+          href={link.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={link.label}
+        >
+          {link.icon}
+        </IconButton>
+      ))}
     </Box>
   );
 
+  const drawerItems = (
+    <List>
+      {menuLinks.map((link) => (
+        <ListItem disablePadding key={link.label}>
+          <ListItemButton
+            component="a"
+            href={link.href}
+            onClick={handleDrawerToggle}
+            target={link.external ? '_blank' : undefined}
+            rel={link.external ? 'noopener noreferrer' : undefined}
+          >
+            <ListItemText primary={link.label} />
+          </ListItemButton>
+        </ListItem>
+      ))}
+      <ListItem>
+        {socialLinks.map((link) => (
+          <IconButton
+            key={link.label}
+            color="inherit"
+            component="a"
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={link.label}
+          >
+            {link.icon}
+          </IconButton>
+        ))}
+      </ListItem>
+    </List>
+  );
+
   return (
-    <AppBar position="static" color="transparent" elevation={0} id="home">
+    <AppBar component="nav" position="static" color="transparent" elevation={0} id="home">
       <Toolbar>
         {!isMobile ? (
           <Box display="flex" justifyContent="flex-start" sx={{ gap: 2 }}>
@@ -69,7 +133,7 @@ const NavBar: React.FC = () => {
             <IconButton
               edge="end"
               color="inherit"
-              aria-label="menu"
+              aria-label="Otwórz menu"
               onClick={handleDrawerToggle}
             >
               <MenuIcon sx={{ color: 'white' }} />
@@ -78,56 +142,7 @@ const NavBar: React.FC = () => {
         )}
       </Toolbar>
       <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerToggle}>
-        <List>
-          <Link href="#home" passHref>
-            <ListItem onClick={handleDrawerToggle}>
-              <ListItemText primary="Home" />
-            </ListItem>
-          </Link>
-          <Link href="#about" passHref>
-            <ListItem onClick={handleDrawerToggle}>
-              <ListItemText primary="O nas" />
-            </ListItem>
-          </Link>
-          <Link href="#offer" passHref>
-            <ListItem onClick={handleDrawerToggle}>
-              <ListItemText primary="Oferta" />
-            </ListItem>
-          </Link>
-          <Link href="#artist" passHref>
-            <ListItem onClick={handleDrawerToggle}>
-              <ListItemText primary="Artyści" />
-            </ListItem>
-          </Link>
-          <Link href="#gallery" passHref>
-            <ListItem onClick={handleDrawerToggle}>
-              <ListItemText primary="Galeria" />
-            </ListItem>
-          </Link>
-          <Link href="#movies" passHref>
-            <ListItem onClick={handleDrawerToggle}>
-              <ListItemText primary="Filmy" />
-            </ListItem>
-          </Link>
-          <Link href="#contact" passHref>
-            <ListItem onClick={handleDrawerToggle}>
-              <ListItemText primary="Kontakt" />
-            </ListItem>
-          </Link>
-          <Link href="https://www.bilety24.pl/szukaj?search=Zagadka+tenora&submit=" passHref>
-            <ListItem onClick={handleDrawerToggle}>
-              <ListItemText primary="Bilety" />
-            </ListItem>
-          </Link>
-          <ListItem onClick={handleDrawerToggle}>
-            <IconButton color="inherit" component={Link} href="https://www.facebook.com/profile.php?id=61557994065108">
-              <FacebookIcon />
-            </IconButton>
-            <IconButton color="inherit" component={Link} href="https://www.youtube.com/@pawelwytrazek2005/videos">
-              <YouTubeIcon />
-            </IconButton>
-          </ListItem>
-        </List>
+        {drawerItems}
       </Drawer>
     </AppBar>
   );
