@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Slider, { Settings } from 'react-slick';
 import { Box, IconButton, Link } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
@@ -61,7 +61,6 @@ const PrevArrow: React.FC<ArrowProps> = ({ onClick }) => (
 
 const Movies: React.FC<{ moviesData: moviesType }> = ({ moviesData }) => {
   const [slidesToShow, setSlidesToShow] = useState(3);
-  const [playerVars, setPlayerVars] = useState({});
 
   useEffect(() => {
     const handleResize = () => {
@@ -83,23 +82,20 @@ const Movies: React.FC<{ moviesData: moviesType }> = ({ moviesData }) => {
     };
   }, []);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setPlayerVars({ origin: window.location.origin });
-    }
-  }, []);
-
-  const settings: Settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: slidesToShow,
-    slidesToScroll: 1,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
-    adaptiveHeight: true,
-    accessibility: true,
-  };
+  const settings: Settings = useMemo(
+    () => ({
+      dots: false,
+      infinite: true,
+      speed: 500,
+      slidesToShow: slidesToShow,
+      slidesToScroll: 1,
+      nextArrow: <NextArrow />,
+      prevArrow: <PrevArrow />,
+      adaptiveHeight: true,
+      accessibility: true,
+    }),
+    [slidesToShow]
+  );
 
   return (
     <Box
@@ -128,9 +124,6 @@ const Movies: React.FC<{ moviesData: moviesType }> = ({ moviesData }) => {
                 height="100%"
                 style={{ position: 'absolute', top: 0, left: 0 }}
                 controls={true}
-                config={{
-                  playerVars: playerVars,
-                }}
               />
             </Box>
           ))}

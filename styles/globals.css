@@ -62,3 +62,13 @@ html, body {
   background-color: #f4f4f4;
   padding: 8px;
 }
+
+
+@keyframes showAnim {
+  from{
+    transform: translateY(40px);
+  }
+  to{
+    transform: translateY(0);
+  }
+}

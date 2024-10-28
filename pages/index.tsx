@@ -1,5 +1,4 @@
 import { GetStaticProps } from 'next';
-import Head from 'next/head';
 import MainPage from "@/components/Home";
 import About from "@/components/About";
 import Movies from "@/components/Movies";
@@ -13,7 +12,10 @@ import { aboutType, artistsType, contactType, eventsType, galeryType, intro, mov
 import Events from '@/components/Events';
 import Musicians from '@/components/Musicians';
 import Galery from '@/components/Galery';
-
+import Head from 'next/head';
+import FadeInOnScroll from '@/components/FadeInOnScroll';
+import dynamic from 'next/dynamic';
+const StickyIcons = dynamic(() => import('@/components/StickyIcons'), { ssr: false });
 type HomeProps = {
   introData: intro[];
   eventsData: eventsType[];
@@ -36,6 +38,7 @@ const getPDFURL = async (path: string): Promise<string> => {
     return '';
   }
 };
+
 
 export const getStaticProps: GetStaticProps = async () => {
   const fetchDataFromFirebase = async () => {
@@ -92,6 +95,7 @@ export const getStaticProps: GetStaticProps = async () => {
         artistsSnapshot.docs.map(async (doc) => {
           const data = doc.data();
           return {
+            
             intro: data.intro || '',
             id: doc.id,
             name: data.name || '',
@@ -197,51 +201,52 @@ const Home: React.FC<HomeProps> = ({
   moviesData,
   contactData,
 }) => {
-  console.log(offerData);
+
   return (
+    <>
+    <Head>
+      <title>Love Duet Operetka - Dorota Ritz i Paweł Wisnar | Duet Operetkowy Warszawa</title>
+      <meta name="description" content="Love Duet Operetka - warszawski duet operetkowy z ponad dekadą doświadczenia na polskich i zagranicznych scenach. Dorota Ritz (sopran) i Paweł Wisnar (tenor) tworzą wyjątkowe, komediowe show operetkowo-musicalowe. Z miłością i pasją występujemy od 2010 roku, prezentując autorskie programy operetkowe, kabarety i koncerty w całej Polsce i za granicą." />
+      <meta name="keywords" content="Love Duet, duet operetkowy, Dorota Ritz, Paweł Wisnar, warszawski duet śpiewaczy, show operetkowe, koncerty operetkowe, operetka Warszawa, muzyka klasyczna, duet muzyczny, koncerty muzyczne, kabaret miłości, operetka Przeboje, Kolędowanie z Love Duet, musical komediowy, duet operowy" />
+      <meta property="og:title" content="Love Duet Operetka - Wyjątkowy Duet Operetkowy" />
+      <meta property="og:description" content="Warszawski duet operetkowy z pasją i doświadczeniem - Dorota Ritz i Paweł Wisnar prezentują autorskie, komediowe show operetkowe. Ponad dekada występów na polskich i zagranicznych scenach!" />
+      <meta property="og:image" content="URL_do_zdjęcia_duetu" />
+      <meta property="og:url" content="https://loveduetoperetka.pl/" />
+      <meta property="og:type" content="website" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="Love Duet Operetka - Wyjątkowy Duet Operetkowy" />
+      <meta name="twitter:description" content="Dorota Ritz i Paweł Wisnar tworzą warszawski duet operetkowy występujący od 2010 roku na polskich i zagranicznych scenach. Dołącz do nas na naszym muzycznym show!" />
+      <meta name="twitter:image" content="URL_do_zdjęcia_duetu" />
+
+    </Head>
     <Box sx={{ bgcolor: 'black' }}>
-<Head>
-        <title>Love Duet - Dorota Ritz i Paweł Wisnar | Warszawski Duet Operetkowy</title>
-        <link rel="icon" href="/icon2.jpg" type="image/png" sizes="32x32" />
-
-        <meta
-          name="description"
-          content="Love Duet to warszawski duet śpiewaków operetkowych - Dorota Ritz (sopran) i Paweł Wisnar (tenor). Od 2010 roku występują na polskich i zagranicznych estradach, tworząc autorskie programy operetkowo-musicalowe."
-        />
-        <meta
-          name="keywords"
-          content="Love Duet, Dorota Ritz, Paweł Wisnar, operetka, duet operetkowy, warszawski duet, śpiewacy operowi, programy operetkowe, muzyka, kultura, spektakle muzyczne, show operetkowe, Bel Canto"
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-=        <meta property="og:title" content="Love Duet - Dorota Ritz i Paweł Wisnar | Warszawski Duet Operetkowy" />
-        <meta
-          property="og:description"
-          content="Love Duet to warszawski duet śpiewaków operetkowych - Dorota Ritz (sopran) i Paweł Wisnar (tenor). Od 2010 roku występują na polskich i zagranicznych estradach, tworząc autorskie programy operetkowo-musicalowe."
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.loveduet.pl" />
-        <meta property="og:image" content="URL_do_obrazka" />
-
-=        <meta name="twitter:title" content="Love Duet - Dorota Ritz i Paweł Wisnar | Warszawski Duet Operetkowy" />
-        <meta
-          name="twitter:description"
-          content="Love Duet to warszawski duet śpiewaków operetkowych - Dorota Ritz (sopran) i Paweł Wisnar (tenor). Od 2010 roku występują na polskich i zagranicznych estradach, tworząc autorskie programy operetkowo-musicalowe."
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="URL_do_obrazka" />
-
-=        <link rel="canonical" href="https://www.loveduet.pl" />
-      </Head>
-      <MainPage introData={introData} />
-      <PhotoComponent introData={introData} />
-      <About aboutData={aboutData} />
-      <Events eventsData={eventsData} offerData={offerData} />
-      <Musicians artistsData={artistsData} />
-      <Galery galeryData={galeryData} />
-      <Movies moviesData={moviesData[0]} />
-      <Contact contactData={contactData} />
-    </Box>
+        <StickyIcons />
+        <FadeInOnScroll>
+          <MainPage introData={introData} />
+        </FadeInOnScroll>
+        <FadeInOnScroll>
+          <PhotoComponent introData={introData} />
+        </FadeInOnScroll>
+        <FadeInOnScroll>
+          <About aboutData={aboutData} />
+        </FadeInOnScroll>
+        <FadeInOnScroll>
+          <Events eventsData={eventsData} offerData={offerData} />
+        </FadeInOnScroll>
+        <FadeInOnScroll>
+          <Musicians artistsData={artistsData} />
+        </FadeInOnScroll>
+        <FadeInOnScroll>
+          <Galery galeryData={galeryData} />
+        </FadeInOnScroll>
+        <FadeInOnScroll>
+          <Movies moviesData={moviesData[0]} />
+        </FadeInOnScroll>
+        <FadeInOnScroll>
+          <Contact contactData={contactData} />
+        </FadeInOnScroll>
+      </Box>
+    </>
   );
 };
 
