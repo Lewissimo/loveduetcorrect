@@ -19,6 +19,7 @@ import {
   YouTube as YouTubeIcon,
 } from '@mui/icons-material';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const NavBar: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -42,6 +43,7 @@ const NavBar: React.FC = () => {
       label: 'Bilety',
       external: true,
     },
+
   ];
 
   const socialLinks = [
@@ -55,6 +57,13 @@ const NavBar: React.FC = () => {
       icon: <YouTubeIcon />,
       label: 'YouTube',
     },
+    {
+      href: 'https://www.weselezklasa.pl/ogloszenia-weselne/love-duet-ritzwisnar,60345/',
+      icon: <>
+              <Image src={'/weszkl.png'} width={200} height={40} alt='' style={{borderRadius: '25px'}}/>
+            </>,
+      label: 'Wesele z klasą'
+    }
   ];
 
   const menuItems = (

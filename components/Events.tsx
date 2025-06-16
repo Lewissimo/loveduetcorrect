@@ -1,9 +1,23 @@
-import { Box, Grid, List, ListItemButton, ListItemText, Typography, Button } from '@mui/material';
+import {
+  Box,
+  Grid,
+  List,
+  ListItemButton,
+  ListItemText,
+  Typography,
+  Button,
+  Divider,
+} from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { eventsType, offerType } from '@/context/dataTypes';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 
-const Events: React.FC<{ eventsData: eventsType[], offerData: offerType[] }> = ({ eventsData, offerData }) => {
+const Events: React.FC<{ eventsData: eventsType[]; offerData: offerType[] }> = ({
+  eventsData,
+  offerData,
+}) => {
   const [events, setEvents] = useState<eventsType[]>([]);
 
   useEffect(() => {
@@ -30,6 +44,7 @@ const Events: React.FC<{ eventsData: eventsType[], offerData: offerType[] }> = (
         minHeight="100vh"
         sx={{ animation: '1s showAnim forwards', my: '50px' }}
       >
+        {/* --- LEWA STRONA – WYDARZENIA --- */}
         {events.length > 0 && (
           <Grid
             item
@@ -48,12 +63,7 @@ const Events: React.FC<{ eventsData: eventsType[], offerData: offerType[] }> = (
                 padding: '20px',
               }}
             >
-              <Typography
-                variant="h4"
-                component="h2"
-                gutterBottom
-                color="white"
-              >
+              <Typography variant="h4" component="h2" gutterBottom color="white">
                 Zobacz najbliższe wydarzenia:
               </Typography>
               <List sx={{ maxHeight: '70vh', overflow: 'auto' }}>
@@ -72,16 +82,10 @@ const Events: React.FC<{ eventsData: eventsType[], offerData: offerType[] }> = (
                     }}
                   >
                     <ListItemText
-                      primary={
-                        <Typography sx={{ color: 'white' }}>
-                          {item.name}
-                        </Typography>
-                      }
+                      primary={<Typography sx={{ color: 'white' }}>{item.name}</Typography>}
                       secondary={
                         <>
-                          <Typography sx={{ color: 'white' }}>
-                            Data: {item.date}
-                          </Typography>
+                          <Typography sx={{ color: 'white' }}>Data: {item.date}</Typography>
                           <Typography sx={{ color: 'white' }}>
                             Lokalizacja: {item.place}
                           </Typography>
@@ -96,6 +100,7 @@ const Events: React.FC<{ eventsData: eventsType[], offerData: offerType[] }> = (
           </Grid>
         )}
 
+        {/* --- PRAWA STRONA – OFERTA --- */}
         {offerData.length > 0 && (
           <Grid
             item
@@ -119,15 +124,11 @@ const Events: React.FC<{ eventsData: eventsType[], offerData: offerType[] }> = (
                 flexDirection: 'column',
               }}
             >
-              <Typography
-                variant="h4"
-                component="h2"
-                gutterBottom
-                color="white"
-              >
+              <Typography variant="h4" component="h2" gutterBottom color="white">
                 Zobacz ofertę
               </Typography>
 
+              {/* Zdjęcie pobierane z danych oferty */}
               <Box
                 component="img"
                 sx={{
@@ -141,6 +142,7 @@ const Events: React.FC<{ eventsData: eventsType[], offerData: offerType[] }> = (
                 src={offerData[0].photoPath || '/default-image.jpg'}
               />
 
+              {/* Przyciski */}
               <Button
                 variant="contained"
                 color="primary"
@@ -149,6 +151,37 @@ const Events: React.FC<{ eventsData: eventsType[], offerData: offerType[] }> = (
               >
                 Pobierz ofertę
               </Button>
+
+              {/* NOWA SEKCJA – PROFIL NA WESELE Z KLASĄ */}
+              <Divider sx={{ my: 4, bgcolor: 'rgba(255,255,255,0.3)', width: '80%' }} />
+              <Typography variant="h5" component="h3" gutterBottom color="white">
+                Sprawdź nasz profil w Wesele z Klasą:
+              </Typography>
+              <Link
+                href="https://www.weselezklasa.pl/ogloszenia-weselne/love-duet-ritzwisnar,60345/"
+                passHref
+                target='_black'
+              >
+                <Box
+                  sx={{
+                    cursor: 'pointer',
+                    borderRadius: '25px',
+                    overflow: 'hidden',
+                    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+                    transition: 'transform .3s',
+                    '&:hover': { transform: 'scale(1.03)' },
+                  }}
+                >
+                  <Image
+                    src="/weszkl.png"
+                    alt="Love Duet – profil na Wesele z Klasą"
+                    width={400}
+                    height={250}
+                    style={{ width: '100%', height: 'auto' }}
+                    priority
+                  />
+                </Box>
+              </Link>
             </Box>
           </Grid>
         )}
